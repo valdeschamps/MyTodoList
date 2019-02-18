@@ -2,5 +2,9 @@
     <string name="app_name">MyTodoList</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="signIn">Sign In</string>
+    <string name="register">Register</string>
+    <string name="emailHint">Email</string>
+    <string name="passwordHint">Password</string>
+    <string name="passwordHintConfirm">Confirm password</string>
 </resources>

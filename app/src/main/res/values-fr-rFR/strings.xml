@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyTodoList</string>
+    <string name="signIn">Se connecter</string>
+    <string name="register">S\'enregister</string>
+    <string name="emailHint">Email</string>
+    <string name="passwordHint">Mot de passe</string>
+    <string name="passwordHintConfirm">Confirmer le mot de passe</string>
+</resources>

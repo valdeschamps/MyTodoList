@@ -6,11 +6,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.LoginActivity">
-    <fragment
-            android:name="com.example.mytodolist.fragments.login.LoginFragment"
-            android:id="@+id/fragmentLogin" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" android:layout_width="0dp" android:layout_height="0dp"/>
+    <FrameLayout
+            android:layout_height="0dp"
+            android:id="@+id/frameLayoutLogin"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_width="0dp">
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,4 +7,6 @@
     <string name="emailHint">Email</string>
     <string name="passwordHint">Password</string>
     <string name="passwordHintConfirm">Confirm password</string>
+    <string name="errorRegisterEmpty">Some fields are empty</string>
+    <string name="errorRegisterPwdConfirm">Error password confirmation</string>
 </resources>

@@ -9,4 +9,5 @@
     <string name="passwordHintConfirm">Confirm password</string>
     <string name="errorRegisterEmpty">Some fields are empty</string>
     <string name="errorRegisterPwdConfirm">Error password confirmation</string>
+    <string name="appbarSignOut">Sign out</string>
 </resources>

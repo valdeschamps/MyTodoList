@@ -8,4 +8,5 @@
     <string name="passwordHintConfirm">Confirmer le mot de passe</string>
     <string name="errorRegisterEmpty">Certains champs sont vides</string>
     <string name="errorRegisterPwdConfirm">Erreur lors de la confirmation du mot de passe</string>
+    <string name="appbarSignOut">Déconnexion</string>
 </resources>

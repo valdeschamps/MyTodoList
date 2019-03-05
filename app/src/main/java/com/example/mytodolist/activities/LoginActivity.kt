@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mytodolist.R
+import com.example.mytodolist.firebase.FirebaseInfos
 import com.example.mytodolist.fragments.login.LoadingFragment
 import com.example.mytodolist.fragments.login.RegisterFragment
 import com.example.mytodolist.fragments.login.SignInFragment
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_login.*
+import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentInteractionListener, RegisterFragment.OnRegisterFragmentInteractionListener {
-    private lateinit var firebaseAuth: FirebaseAuth
+    private val firebaseInfos: FirebaseInfos by inject()
+    private val firebaseAuth = firebaseInfos.firebaseAuth
     private val fragmentManager = supportFragmentManager
     private val registerFragment: RegisterFragment by lazy {RegisterFragment()}
     private val signInFragment:SignInFragment by lazy {SignInFragment()}
@@ -21,17 +22,16 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        setSupportActionBar(toolbarLogin)
+
         displayLoadingFragment()
-        FirebaseApp.initializeApp(this)
     }
 
     override fun onStart() {
         super.onStart()
-        firebaseAuth = FirebaseAuth.getInstance()
-        val currentUser = firebaseAuth.currentUser
 
-        if (isUserAlreadyLogged(currentUser)){
-            gotoMainActivity(currentUser?.email ?: "error email")
+        if (firebaseInfos.currentUSer() != null){
+            gotoMainActivity()
         }else{
             displaySignInFragment()
         }
@@ -44,14 +44,10 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
 
     override fun onBackPressed() {
         if(fragmentManager.findFragmentById(R.id.frameLayoutLogin) == registerFragment) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            setTopBarForSignIn()
         }
         //todo press 2 times to leave app + display toast
         super.onBackPressed()
-    }
-
-    private fun isUserAlreadyLogged(currentUser: FirebaseUser?):Boolean {
-        return currentUser != null
     }
 
     private fun displayLoadingFragment() {
@@ -67,10 +63,7 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
             replace(R.id.frameLayoutLogin, signInFragment)
             commit()
         }
-        supportActionBar?.apply{
-            setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setTitle(R.string.signIn)
-        }
+        setTopBarForSignIn()
     }
 
     private fun displayRegisterFragment() {
@@ -79,14 +72,25 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
             addToBackStack(null)
             commit()
         }
+        setTopBarForRegister()
+    }
+
+    private fun setTopBarForSignIn(){
+        supportActionBar?.apply{
+            setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setTitle(R.string.signIn)
+        }
+    }
+
+    private fun setTopBarForRegister(){
         supportActionBar?.apply{
             setDisplayHomeAsUpEnabled(true)
             supportActionBar?.setTitle(R.string.register)
         }
     }
 
-    private fun gotoMainActivity(userEmail: String) {
-        val intent = Intent(this, MainActivity::class.java).putExtra("email", userEmail)
+    private fun gotoMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 
@@ -94,8 +98,7 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    gotoMainActivity(user?.email ?: "error email")
+                    gotoMainActivity()
                 } else {
                     signInFragment.displayErrorMessage((task.exception?.message.toString()))
                 }

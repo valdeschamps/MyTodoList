@@ -10,7 +10,6 @@ import androidx.core.view.GravityCompat
 import com.example.mytodolist.R
 import com.example.mytodolist.firebase.FirebaseInfos
 import com.example.mytodolist.fragments.main.TodoListFragment
-import com.example.mytodolist.model.Task
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationViewMain.setNavigationItemSelectedListener(this)
 
         displayTodoListFragment()
-        displayTodoListData()
+        //displayTodoListData()
 
         Log.d("test", "user email = ${firebaseInfos.currentUSer()?.email.toString()}")
     }
@@ -73,6 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /*
     private fun displayTodoListData(){
         //quick test
         val testList = arrayListOf<Task>(
@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
         todoListFragment.updateTaskList(testList)
     }
+    */
 
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

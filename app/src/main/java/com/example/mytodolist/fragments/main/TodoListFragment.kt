@@ -13,11 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytodolist.R
 import com.example.mytodolist.adapter.TaskAdapter
 import com.example.mytodolist.model.Task
+import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_todo_list.*
+import org.koin.android.ext.android.inject
 
-class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener {
+class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresenter.MainActivityView {
+    private val mainPresenter: MainPresenter by inject()
     private var listenerTodoList: OnTodoListFragmentInteractionListener? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mainPresenter.setView(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_todo_list, container, false)
@@ -31,6 +39,8 @@ class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener {
             adapter = recyclerAdapter
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
+
+        mainPresenter.getUserTasks()
     }
 
     override fun onAttach(context: Context) {
@@ -38,16 +48,17 @@ class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener {
         if (context is OnTodoListFragmentInteractionListener) {
             listenerTodoList = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnTodoListFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnTodoListFragmentInteractionListener")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
         listenerTodoList = null
+        mainPresenter.setView(null)
     }
 
-    fun updateTaskList(newTaskList: ArrayList<Task>){
+    private fun updateTaskList(newTaskList: ArrayList<Task>){
         recyclerAdapter.apply {
             updateData(newTaskList)
             notifyDataSetChanged()
@@ -60,6 +71,10 @@ class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener {
 
     override fun onTaskClick(id: String) {
         Toast.makeText(context, "task number : ${id}", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun displayTasks(newTaskList: ArrayList<Task>) {
+        updateTaskList(newTaskList)
     }
 
 }

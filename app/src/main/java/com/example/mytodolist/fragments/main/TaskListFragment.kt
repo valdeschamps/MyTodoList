@@ -1,7 +1,6 @@
 package com.example.mytodolist.fragments.main
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,22 +12,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytodolist.R
 import com.example.mytodolist.adapter.TaskAdapter
 import com.example.mytodolist.model.Task
-import com.example.mytodolist.presenter.MainPresenter
-import kotlinx.android.synthetic.main.fragment_todo_list.*
+import com.example.mytodolist.presenter.TaskListPresenter
+import kotlinx.android.synthetic.main.fragment_task_list.*
 import org.koin.android.ext.android.inject
 
-class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresenter.MainActivityView {
-    private val mainPresenter: MainPresenter by inject()
-    private var listenerTodoList: OnTodoListFragmentInteractionListener? = null
+class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, TaskListPresenter.TaskListPresenterListener {
+    private val taskListPresenter: TaskListPresenter by inject()
+    private var listenerTodoList: TodoListFragmentListener? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainPresenter.setView(this)
+        taskListPresenter.setView(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_todo_list, container, false)
+        return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,22 +39,26 @@ class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
-        mainPresenter.getUserTasks()
+        floatingActionButtonAdd.setOnClickListener {
+            listenerTodoList?.displayAddTaskFragment()
+        }
+
+        taskListPresenter.getUserTasks()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnTodoListFragmentInteractionListener) {
+        if (context is TodoListFragmentListener) {
             listenerTodoList = context
         } else {
-            throw RuntimeException("$context must implement OnTodoListFragmentInteractionListener")
+            throw RuntimeException("$context must implement TodoListFragmentListener")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
         listenerTodoList = null
-        mainPresenter.setView(null)
+        taskListPresenter.setView(null)
     }
 
     private fun updateTaskList(newTaskList: ArrayList<Task>){
@@ -65,14 +68,16 @@ class TodoListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
         }
     }
 
-    interface OnTodoListFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+    interface TodoListFragmentListener {
+        fun displayAddTaskFragment()
     }
 
+    //from TaskAdapter
     override fun onTaskClick(id: String) {
         Toast.makeText(context, "task number : ${id}", Toast.LENGTH_SHORT).show()
     }
 
+    //from TaskListPresenter
     override fun displayTasks(newTaskList: ArrayList<Task>) {
         updateTaskList(newTaskList)
     }

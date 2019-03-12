@@ -78,14 +78,14 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
     private fun setTopBarForSignIn(){
         supportActionBar?.apply{
             setDisplayHomeAsUpEnabled(false)
-            supportActionBar?.setTitle(R.string.signIn)
+            setTitle(R.string.signIn)
         }
     }
 
     private fun setTopBarForRegister(){
         supportActionBar?.apply{
             setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setTitle(R.string.register)
+            setTitle(R.string.register)
         }
     }
 

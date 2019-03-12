@@ -5,24 +5,22 @@ import com.example.mytodolist.model.Task
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class MainPresenter(): KoinComponent {
+class TaskListPresenter(): KoinComponent {
     private val firestoreRepository: FirestoreRepository by inject()
-    private var currentView: MainActivityView? = null
+    private var currentPresenterListener: TaskListPresenterListener? = null
 
-    fun setView(view: MainActivityView?){
-        currentView = view
+    fun setView(presenterListener: TaskListPresenterListener?){
+        currentPresenterListener = presenterListener
     }
-
 
     fun getUserTasks(){
         //ask FirestoreRepository
         val userTasks = firestoreRepository.getUserTasksFromDB()
         userTasks.sortBy { it.order }
-        currentView?.displayTasks(userTasks)
+        currentPresenterListener?.displayTasks(userTasks)
     }
 
-
-    interface MainActivityView{
+    interface TaskListPresenterListener{
         fun displayTasks(newTaskList: ArrayList<Task>)
     }
 

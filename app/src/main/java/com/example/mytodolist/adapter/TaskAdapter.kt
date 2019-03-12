@@ -5,13 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
-import com.example.mytodolist.fragments.main.TodoListFragment
+import com.example.mytodolist.fragments.main.TaskListFragment
 import com.example.mytodolist.model.Task
 import kotlinx.android.synthetic.main.taskcard.view.*
 
-class TaskAdapter(todoListFragment: TodoListFragment) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private var taskList = ArrayList<Task>()
-    private val listener: OnTaskCliCkListener = todoListFragment
+    private val listener: OnTaskCliCkListener = taskListFragment
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var currentTaskPosition = 0

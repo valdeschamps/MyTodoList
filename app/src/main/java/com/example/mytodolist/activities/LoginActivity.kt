@@ -2,13 +2,14 @@ package com.example.mytodolist.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mytodolist.R
 import com.example.mytodolist.firebase.FirebaseInfos
 import com.example.mytodolist.fragments.login.LoadingFragment
 import com.example.mytodolist.fragments.login.RegisterFragment
 import com.example.mytodolist.fragments.login.SignInFragment
+import com.example.mytodolist.model.User
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.ext.android.inject
 
@@ -94,30 +95,23 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
         startActivity(intent)
     }
 
-    override fun signInFragmentSignIn(email:String, password:String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    gotoMainActivity()
-                } else {
-                    signInFragment.displayErrorMessage((task.exception?.message.toString()))
-                }
-            }
+    override fun connectUser() {
+        gotoMainActivity()
     }
 
-    override fun signInFragmentGoToRegister() {
+    override fun goToRegisterFragment() {
         displayRegisterFragment()
     }
 
-    override fun registerFragmentCreateAccount(email: String, password: String) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if(task.isSuccessful){
-                    Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show()
-                    onBackPressed()
-                }else{
-                    registerFragment.displayErrorMessage(task.exception?.message.toString())
-                }
-            }
+    override fun goToSignInFragment() {
+        onBackPressed()
+    }
+
+    private fun createUserDoc(){
+        val newUser= User(firebaseAuth.currentUser?.email ?: "", firebaseAuth.currentUser?.uid ?: "")
+
+        if (TextUtils.isEmpty(newUser.email) && TextUtils.isEmpty(newUser.uid)){
+            firebaseInfos
+        }
     }
 }

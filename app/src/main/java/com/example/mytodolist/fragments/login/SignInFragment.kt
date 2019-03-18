@@ -8,10 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
+import com.example.mytodolist.presenter.LoginPresenter
 import kotlinx.android.synthetic.main.fragment_sign_in.*
+import org.koin.android.ext.android.inject
 
-class SignInFragment : Fragment() {
+class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener {
     private var listenerSignInFragment: OnSignInFragmentInteractionListener? = null
+    private val loginPresenter: LoginPresenter by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loginPresenter.setLoginView(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_sign_in, container, false)
@@ -25,12 +33,13 @@ class SignInFragment : Fragment() {
             val email = editTextEmail.text.toString()
             val password = editTextPassword.text.toString()
             if(isFormValid(email, password)) {
-                listenerSignInFragment?.signInFragmentSignIn(email, password)
+                //listenerSignInFragment?.signInFragmentSignIn(email, password)
+                loginPresenter.loginUser(email, password)
             }
         }
 
         buttonRegister.setOnClickListener {
-            listenerSignInFragment?.signInFragmentGoToRegister()
+            listenerSignInFragment?.goToRegisterFragment()
         }
     }
 
@@ -46,6 +55,7 @@ class SignInFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listenerSignInFragment = null
+        loginPresenter.setLoginView(null)
     }
 
     private fun isFormValid(email: String, password: String): Boolean {
@@ -56,12 +66,21 @@ class SignInFragment : Fragment() {
         return true
     }
 
-    fun displayErrorMessage(message: String) {
+    private fun displayErrorMessage(message: String) {
         textViewSignInError.text = message
     }
 
+    override fun displayConnectionError(message: String) {
+        displayErrorMessage(message)
+    }
+
+    override fun connectUser() {
+        listenerSignInFragment?.connectUser()
+    }
+
     interface OnSignInFragmentInteractionListener {
-        fun signInFragmentSignIn(email:String, password:String)
-        fun signInFragmentGoToRegister()
+        //fun signInFragmentSignIn(email:String, password:String)
+        fun goToRegisterFragment()
+        fun connectUser()
     }
 }

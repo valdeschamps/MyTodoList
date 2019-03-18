@@ -1,14 +1,48 @@
 package com.example.mytodolist.firebase
 
 import com.example.mytodolist.model.Task
+import com.google.android.gms.tasks.Tasks
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 class FirestoreRepository(): KoinComponent {
     private val firebaseInfos: FirebaseInfos by inject()
+    private val user = firebaseInfos.currentUSer()
+    private val firestoreDB = firebaseInfos.firestoreDB
+    private val firebaseAuth = firebaseInfos.firebaseAuth
 
-    fun saveTask(){
+    fun createUSer(email: String, password: String): Pair<Boolean, String>{
+        val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
+        return try {
+            Tasks.await(task)
+            if(task.isSuccessful){
+                Pair(true, "")
+            }else{
+                Pair(false, task.exception.toString())
+            }
+        }catch (e: Exception){
+            Pair(false, task.exception?.message?: "error account creation")//todo res string
+        }
+    }
 
+    fun loginUser(email: String, password: String): Pair<Boolean, String>{
+        val task = firebaseAuth.signInWithEmailAndPassword(email, password)
+
+        return try {
+            Tasks.await(task)
+            if(task.isSuccessful){
+                Pair(true, "")
+            }else{
+                Pair(false, task.exception.toString())
+            }
+        }catch (e: Exception){
+            Pair(false, task.exception?.message?: "error auth")//todo res string
+        }
+    }
+
+    fun saveTask(newTask: Task){
+        firestoreDB.collection(firebaseInfos.collectionUsersName)
+            .document(user?.uid ?: "")
     }
 
     fun editTask(){

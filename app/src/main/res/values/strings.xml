@@ -10,4 +10,8 @@
     <string name="errorRegisterEmpty">Some fields are empty</string>
     <string name="errorRegisterPwdConfirm">Error password confirmation</string>
     <string name="appbarSignOut">Sign out</string>
+    <string name="new_task_title">Title</string>
+    <string name="new_task_desc">Description</string>
+    <string name="new_task_cancel">Cancel</string>
+    <string name="new_task_confirm">Confirm</string>
 </resources>

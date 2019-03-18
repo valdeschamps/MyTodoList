@@ -9,4 +9,8 @@
     <string name="errorRegisterEmpty">Certains champs sont vides</string>
     <string name="errorRegisterPwdConfirm">Erreur lors de la confirmation du mot de passe</string>
     <string name="appbarSignOut">Déconnexion</string>
+    <string name="new_task_title">Titre</string>
+    <string name="new_task_desc">Description</string>
+    <string name="new_task_cancel">Annuler</string>
+    <string name="new_task_confirm">Confirmer</string>
 </resources>

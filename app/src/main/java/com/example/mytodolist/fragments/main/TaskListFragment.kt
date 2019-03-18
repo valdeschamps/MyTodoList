@@ -12,18 +12,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytodolist.R
 import com.example.mytodolist.adapter.TaskAdapter
 import com.example.mytodolist.model.Task
-import com.example.mytodolist.presenter.TaskListPresenter
+import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_task_list.*
 import org.koin.android.ext.android.inject
 
-class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, TaskListPresenter.TaskListPresenterListener {
-    private val taskListPresenter: TaskListPresenter by inject()
+class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresenter.TaskListPresenterListener {
+    private val mainPresenter: MainPresenter by inject()
     private var listenerTodoList: TodoListFragmentListener? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        taskListPresenter.setView(this)
+        mainPresenter.setView(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,7 +43,7 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, TaskListPr
             listenerTodoList?.displayAddTaskFragment()
         }
 
-        taskListPresenter.getUserTasks()
+        mainPresenter.getUserTasks()
     }
 
     override fun onAttach(context: Context) {
@@ -58,7 +58,7 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, TaskListPr
     override fun onDetach() {
         super.onDetach()
         listenerTodoList = null
-        taskListPresenter.setView(null)
+        mainPresenter.setView(null)
     }
 
     private fun updateTaskList(newTaskList: ArrayList<Task>){
@@ -77,7 +77,7 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, TaskListPr
         Toast.makeText(context, "task number : ${id}", Toast.LENGTH_SHORT).show()
     }
 
-    //from TaskListPresenter
+    //from MainPresenter
     override fun displayTasks(newTaskList: ArrayList<Task>) {
         updateTaskList(newTaskList)
     }

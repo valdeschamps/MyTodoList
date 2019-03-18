@@ -8,10 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
+import com.example.mytodolist.presenter.LoginPresenter
 import kotlinx.android.synthetic.main.fragment_register.*
+import org.koin.android.ext.android.inject
 
-class RegisterFragment : Fragment() {
+class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener {
     private var listenerRegisterFragment: OnRegisterFragmentInteractionListener? = null
+    private val loginPresenter: LoginPresenter by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loginPresenter.setRegisterView(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register, container, false)
@@ -25,7 +33,8 @@ class RegisterFragment : Fragment() {
             val passwordConfirm = editTextPwdConfirm.text.toString()
 
             if(isFormValid(email, password, passwordConfirm)){
-                listenerRegisterFragment?.registerFragmentCreateAccount(email, password)
+                loginPresenter.createUser(email, password)
+                //listenerRegisterFragment?.registerFragmentCreateAccount(email, password)
             }
         }
     }
@@ -42,6 +51,7 @@ class RegisterFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listenerRegisterFragment = null
+        loginPresenter.setRegisterView(null)
     }
 
     private fun isFormValid(email: String, password: String, passwordConfirm: String):Boolean {
@@ -57,11 +67,19 @@ class RegisterFragment : Fragment() {
         return true
     }
 
-    fun displayErrorMessage(message: String) {
+    private fun displayErrorMessage(message: String) {
         textViewError.text = message
     }
 
+    override fun displayRegisterError(message: String) {
+        displayErrorMessage(message)
+    }
+
+    override fun confirmRegister() {
+        listenerRegisterFragment?.goToSignInFragment()
+    }
+
     interface OnRegisterFragmentInteractionListener {
-        fun registerFragmentCreateAccount(email: String, password: String)
+        fun goToSignInFragment()
     }
 }

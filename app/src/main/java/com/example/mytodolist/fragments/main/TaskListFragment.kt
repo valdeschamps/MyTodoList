@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytodolist.R
 import com.example.mytodolist.adapter.TaskAdapter
-import com.example.mytodolist.model.Task
+import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_task_list.*
 import org.koin.android.ext.android.inject
@@ -23,7 +23,7 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainPresenter.setView(this)
+        mainPresenter.setTaskListView(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -58,12 +58,12 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
     override fun onDetach() {
         super.onDetach()
         listenerTodoList = null
-        mainPresenter.setView(null)
+        mainPresenter.setTaskListView(null)
     }
 
-    private fun updateTaskList(newTaskList: ArrayList<Task>){
+    private fun updateTaskList(newTodoTaskList: ArrayList<TodoTask>){
         recyclerAdapter.apply {
-            updateData(newTaskList)
+            updateData(newTodoTaskList)
             notifyDataSetChanged()
         }
     }
@@ -78,8 +78,16 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
     }
 
     //from MainPresenter
-    override fun displayTasks(newTaskList: ArrayList<Task>) {
-        updateTaskList(newTaskList)
+    override fun displayTasks(newTodoTaskList: ArrayList<TodoTask>) {
+        updateTaskList(newTodoTaskList)
+    }
+
+    override fun displayHint() {
+        //todo
+    }
+
+    override fun displayError(error: String) {
+        //todo
     }
 
 }

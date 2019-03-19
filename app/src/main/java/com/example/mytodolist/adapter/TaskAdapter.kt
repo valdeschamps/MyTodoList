@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
 import com.example.mytodolist.fragments.main.TaskListFragment
-import com.example.mytodolist.model.Task
+import com.example.mytodolist.model.TodoTask
 import kotlinx.android.synthetic.main.taskcard.view.*
 
 class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-    private var taskList = ArrayList<Task>()
+    private var taskList = ArrayList<TodoTask>()
     private val listener: OnTaskCliCkListener = taskListFragment
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -18,22 +18,22 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
 
         init {
             itemView.setOnClickListener {
-                listener.onTaskClick(taskList[currentTaskPosition].id)
+                listener.onTaskClick(taskList[currentTaskPosition].title)
             }
         }
 
-        fun displayTask(task: Task, position: Int) {
+        fun displayTask(todoTask: TodoTask, position: Int) {
             currentTaskPosition = position
             itemView.apply{
-                textViewOrder.text = task.order.toString()
-                textViewTitle.text = task.title
-                textViewDeadline.text = task.deadLine.toString()
+                textViewOrder.text = todoTask.order.toString()
+                textViewTitle.text = todoTask.title
+                textViewDeadline.text = todoTask.deadLine.toString()
             }
         }
     }
 
-    fun updateData(newTaskList: ArrayList<Task>){
-        taskList = newTaskList
+    fun updateData(newTodoTaskList: ArrayList<TodoTask>){
+        taskList = newTodoTaskList
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {

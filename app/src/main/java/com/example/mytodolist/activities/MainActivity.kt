@@ -116,7 +116,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     //from NewTaskFragment
-    override fun newTaskFragmentCancel() {
+    override fun newTaskFragmentDismiss() {
         onBackPressed()
     }
+
 }

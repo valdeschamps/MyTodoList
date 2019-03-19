@@ -1,6 +1,7 @@
 package com.example.mytodolist.firebase
 
-import com.example.mytodolist.model.Task
+import com.example.mytodolist.model.TodoTask
+import com.example.mytodolist.model.User
 import com.google.android.gms.tasks.Tasks
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -40,9 +41,66 @@ class FirestoreRepository(): KoinComponent {
         }
     }
 
-    fun saveTask(newTask: Task){
-        firestoreDB.collection(firebaseInfos.collectionUsersName)
+    private fun createUSerDoc(): Boolean{
+        val newUser = User(user?.email ?: "", user?.uid ?: "")
+        val createUserDocTask = firestoreDB.collection(firebaseInfos.collectionUsersName)
+            .document(newUser.uid)
+            .set(newUser)
+
+        return try {
+            Tasks.await(createUserDocTask)
+            createUserDocTask.isSuccessful
+        }catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun checkUserDocExist(): Boolean{
+        val getUserDocTask = firestoreDB.collection(firebaseInfos.collectionUsersName)
+            .document(user?.uid.toString())
+            .get()
+
+        return try{
+            Tasks.await(getUserDocTask)
+            val user = getUserDocTask.result
+            if(user?.exists() == true){
+                true
+            }else{
+                createUSerDoc()
+            }
+        }catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun saveTodoTask(newTodoTask: TodoTask): Boolean{
+        val docRef = firestoreDB.collection(firebaseInfos.collectionUsersName)
             .document(user?.uid ?: "")
+            .collection(firebaseInfos.collectionTasksName)
+            .document()
+
+        newTodoTask.id = docRef.id
+        val addTodoTask = docRef.set(newTodoTask)
+
+        return try {
+            Tasks.await(addTodoTask)
+            addTodoTask.isSuccessful
+        }catch (e: Exception) {
+            false
+        }
+    }
+
+    fun addNewTodoTask(newTodoTask: TodoTask): Pair<Boolean, String> {
+        if (checkUserDocExist()) {
+            return if(saveTodoTask(newTodoTask)){
+                Pair(true, "")
+            }else{
+                Pair(false, "")
+            }
+        } else {
+            return Pair(false, "")
+        }
+        //todo use pair to get error and display
     }
 
     fun editTask(){
@@ -53,17 +111,31 @@ class FirestoreRepository(): KoinComponent {
 
     }
 
-    fun getUserTasksFromDB(): ArrayList<Task>{
-        //get from DB
-        //quick test
+    fun getUserTodoTasksList(): Triple<Boolean, ArrayList<TodoTask>, String>{
+        val taskList = ArrayList<TodoTask>()
 
-        return arrayListOf(
-            Task("1", 1, "title 1", "desc 1", 1.00, 1.00),
-            Task("0", 0, "title 0", "desc 0", 0.00, 0.00),
-            Task("3", 3, "title 3", "desc 3", 3.00, 3.00),
-            Task("4", 4, "title 4", "desc 4", 4.00, 4.00),
-            Task("2", 2, "title 2", "desc 2", 2.00, 2.00)
-        )
+        val getTodoTaskList = firestoreDB.collection(firebaseInfos.collectionUsersName)
+            .document(user?.uid ?: "")
+            .collection(firebaseInfos.collectionTasksName)
+            .get()
+
+        try{
+            Tasks.await(getTodoTaskList)
+            if(getTodoTaskList.isSuccessful){
+                val taskResult = getTodoTaskList.result
+                if(taskResult != null) {
+                    for (document in taskResult) {
+                        taskList.add(document.toObject(TodoTask::class.java))
+                    }
+                    return Triple(true, taskList, "")
+                }
+                return Triple(true, taskList, "empty")
+            }else{
+                return Triple(false, taskList, "error")
+            }
+        }catch (e: Exception) {
+            return Triple(false, taskList, getTodoTaskList.exception?.message ?: "error")
+        }
     }
 
     fun getTask(){

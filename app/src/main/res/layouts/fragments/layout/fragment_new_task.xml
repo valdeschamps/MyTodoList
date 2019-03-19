@@ -6,7 +6,6 @@
              android:layout_height="match_parent"
              tools:context=".fragments.main.NewTaskFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -32,7 +31,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textInputTitle"/>
+                        android:id="@+id/textInputTitle" android:singleLine="true"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -54,7 +53,6 @@
                     android:layout_marginBottom="16dp">
 
                     <TextView
-                        android:text="TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/textViewDate"
@@ -83,7 +81,6 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:text="TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/textViewTime"

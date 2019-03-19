@@ -2,7 +2,6 @@ package com.example.mytodolist.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -28,8 +27,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationViewMain.setNavigationItemSelectedListener(this)
 
         displayTaskListFragment()
-
-        Log.d("test", "user email = ${firebaseInfos.currentUSer()?.email.toString()}")
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -42,6 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setTopBarTaskList()
         }
 
+        //todo press 2 times to leave
         super.onBackPressed()
     }
 

@@ -40,6 +40,7 @@ class MainPresenter(): KoinComponent {
     }
 
     fun addNewTask(newTodoTask: TodoTask){
+        //todo add loading spinner
         scopeMain.launch {
             val result = withContext(Dispatchers.Default){
                 firestoreRepository.addNewTodoTask(newTodoTask)

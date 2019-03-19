@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
@@ -16,7 +19,7 @@ import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 
-class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskPresenterListener {
+class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskPresenterListener, TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
     private var listenerNewTaskFragment: NewTaskFragmentListener? = null
 
@@ -26,7 +29,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_new_task, container, false)
+        return inflater.inflate(com.example.mytodolist.R.layout.fragment_new_task, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,11 +56,13 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
 
         imageViewDate.setOnClickListener(this)
         imageViewTime.setOnClickListener(this)
+        //todo layout elevation
         buttonCancel.setOnClickListener(this)
         buttonConfirm.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
+        closeKeyboard()
         when (view){
             imageViewDate -> {
                 //todo
@@ -69,7 +74,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
                 listenerNewTaskFragment?.newTaskFragmentDismiss()
             }
             buttonConfirm -> {
-                //todo close keyboard
                 addNewTask()
             }
         }
@@ -90,14 +94,23 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
         mainPresenter.setNewTaskView(null)
     }
 
+    override fun onEditorAction(view: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        when(view){
+            textInputTitle -> {
+                textInputDesc.requestFocus()
+            }
+        }
+        return true
+    }
+
     private fun isValid(newTodoTask: TodoTask): Boolean{
         if (TextUtils.isEmpty(newTodoTask.title)){
-            textLayoutTitle.error = "empty field" //todo res string
+            textLayoutTitle.error = resources.getString(R.string.empty_field)
             return false
         }
 
         if (TextUtils.isEmpty(newTodoTask.description)){
-            textLayoutDesc.error = "empty field" //todo res string
+            textLayoutDesc.error = resources.getString(R.string.empty_field)
             return false
         }
         //todo check date and time
@@ -120,8 +133,26 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
         }
     }
 
+    private fun clearForm(){
+        textInputTitle.setText("")
+        textInputDesc.setText("")
+        textViewDate.text = ""
+        textViewTime.text = ""
+    }
+
+    private fun closeKeyboard(){
+        val view = activity?.currentFocus
+        if(view != null){
+            val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+    }
+
+    //from mainPresenter
     override fun closeNewTaskFragment() {
         Toast.makeText(context, "new task added", Toast.LENGTH_SHORT).show()
+        clearForm()
         listenerNewTaskFragment?.newTaskFragmentDismiss()
     }
 

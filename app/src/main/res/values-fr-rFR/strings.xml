@@ -13,4 +13,7 @@
     <string name="new_task_desc">Description</string>
     <string name="new_task_cancel">Annuler</string>
     <string name="new_task_confirm">Confirmer</string>
+    <string name="todo_task_list_hint">Utilisez le + pour ajouter une nouvelle tâche</string>
+    <string name="back_toast_message">Appuyer à nouveau sur retour pour quitter</string>
+    <string name="empty_field">Champ vide</string>
 </resources>

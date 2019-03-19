@@ -33,7 +33,8 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerViewTask.apply {
+        //todo pull to refresh
+        recyclerViewTodoTask.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -62,9 +63,24 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
     }
 
     private fun updateTaskList(newTodoTaskList: ArrayList<TodoTask>){
+        hideMessage()
         recyclerAdapter.apply {
             updateData(newTodoTaskList)
             notifyDataSetChanged()
+        }
+    }
+
+    private fun displayMessage(message: String){
+        textViewTodoTaskList.apply {
+            text = message
+            visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideMessage(){
+        textViewTodoTaskList.apply {
+            text = ""
+            visibility = View.INVISIBLE
         }
     }
 
@@ -84,10 +100,12 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
 
     override fun displayHint() {
         //todo
+        displayMessage(resources.getString(R.string.todo_task_list_hint))
     }
 
     override fun displayError(error: String) {
         //todo
+        displayMessage(error)
     }
 
 }

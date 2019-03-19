@@ -3,14 +3,18 @@ package com.example.mytodolist.firebase
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.model.User
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseUser
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 class FirestoreRepository(): KoinComponent {
     private val firebaseInfos: FirebaseInfos by inject()
-    private val user = firebaseInfos.currentUSer()
     private val firestoreDB = firebaseInfos.firestoreDB
     private val firebaseAuth = firebaseInfos.firebaseAuth
+
+    private fun user(): FirebaseUser? {
+        return firebaseInfos.currentUSer()
+    }
 
     fun createUSer(email: String, password: String): Pair<Boolean, String>{
         val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -42,7 +46,7 @@ class FirestoreRepository(): KoinComponent {
     }
 
     private fun createUSerDoc(): Boolean{
-        val newUser = User(user?.email ?: "", user?.uid ?: "")
+        val newUser = User(user()?.email ?: "", user()?.uid ?: "")
         val createUserDocTask = firestoreDB.collection(firebaseInfos.collectionUsersName)
             .document(newUser.uid)
             .set(newUser)
@@ -57,7 +61,7 @@ class FirestoreRepository(): KoinComponent {
 
     private fun checkUserDocExist(): Boolean{
         val getUserDocTask = firestoreDB.collection(firebaseInfos.collectionUsersName)
-            .document(user?.uid.toString())
+            .document(user()?.uid.toString())
             .get()
 
         return try{
@@ -75,7 +79,7 @@ class FirestoreRepository(): KoinComponent {
 
     private fun saveTodoTask(newTodoTask: TodoTask): Boolean{
         val docRef = firestoreDB.collection(firebaseInfos.collectionUsersName)
-            .document(user?.uid ?: "")
+            .document(user()?.uid ?: "")
             .collection(firebaseInfos.collectionTasksName)
             .document()
 
@@ -115,7 +119,7 @@ class FirestoreRepository(): KoinComponent {
         val taskList = ArrayList<TodoTask>()
 
         val getTodoTaskList = firestoreDB.collection(firebaseInfos.collectionUsersName)
-            .document(user?.uid ?: "")
+            .document(user()?.uid ?: "")//todo can crash after login
             .collection(firebaseInfos.collectionTasksName)
             .get()
 
@@ -127,6 +131,8 @@ class FirestoreRepository(): KoinComponent {
                     for (document in taskResult) {
                         taskList.add(document.toObject(TodoTask::class.java))
                     }
+
+                    //todo sort
                     return Triple(true, taskList, "")
                 }
                 return Triple(true, taskList, "empty")

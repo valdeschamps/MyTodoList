@@ -11,6 +11,8 @@ class FirebaseInfos{
 
     val collectionUsersName: String = "users"
     val collectionTasksName: String = "tasks"
+    val todoTaskPropertieDone: String = "done"
+    val todoTaskPropertieOrder: String = "order"
 
     fun userDisconnect(){
         firebaseAuth.signOut()

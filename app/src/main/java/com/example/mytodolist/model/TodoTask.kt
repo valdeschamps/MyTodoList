@@ -7,7 +7,8 @@ data class TodoTask(
     var description: String = "",
     var createdTime: Double = 0.0,
     var deadLine: Double = 0.0,
-    var done: Boolean = false
+    var done: Boolean = false,
+    var nextID: String = ""
 )
 
 data class User(

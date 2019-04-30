@@ -19,7 +19,8 @@ import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 
-class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskPresenterListener, TextView.OnEditorActionListener {
+class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskPresenterListener,
+    TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
     private var listenerNewTaskFragment: NewTaskFragmentListener? = null
 
@@ -35,7 +36,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        textInputTitle.addTextChangedListener(object : TextWatcher{
+        textInputTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -44,7 +45,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
             }
         })
 
-        textInputDesc.addTextChangedListener(object: TextWatcher{
+        textInputDesc.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -63,7 +64,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
 
     override fun onClick(view: View?) {
         closeKeyboard()
-        when (view){
+        when (view) {
             imageViewDate -> {
                 //todo
             }
@@ -95,7 +96,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
     }
 
     override fun onEditorAction(view: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        when(view){
+        when (view) {
             textInputTitle -> {
                 textInputDesc.requestFocus()
             }
@@ -103,13 +104,13 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
         return true
     }
 
-    private fun isValid(newTodoTask: TodoTask): Boolean{
-        if (TextUtils.isEmpty(newTodoTask.title)){
+    private fun isValid(newTodoTask: TodoTask): Boolean {
+        if (TextUtils.isEmpty(newTodoTask.title)) {
             textLayoutTitle.error = resources.getString(R.string.empty_field)
             return false
         }
 
-        if (TextUtils.isEmpty(newTodoTask.description)){
+        if (TextUtils.isEmpty(newTodoTask.description)) {
             textLayoutDesc.error = resources.getString(R.string.empty_field)
             return false
         }
@@ -117,7 +118,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
         return true
     }
 
-    private fun getForm(): TodoTask{
+    private fun getForm(): TodoTask {
         val newTask = TodoTask()
         newTask.apply {
             title = textInputTitle.text.toString()
@@ -126,25 +127,26 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
         return newTask
     }
 
-    private fun addNewTask(){
+    private fun addNewTask() {
         val task = getForm()
-        if (isValid(task)){
+        if (isValid(task)) {
             mainPresenter.addNewTask(task)
         }
     }
 
-    private fun clearForm(){
+    private fun clearForm() {
         textInputTitle.setText("")
         textInputDesc.setText("")
         textViewDate.text = ""
         textViewTime.text = ""
     }
 
-    private fun closeKeyboard(){
+    private fun closeKeyboard() {
         val view = activity?.currentFocus
-        if(view != null){
+        if (view != null) {
             val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputManager.hideSoftInputFromWindow(activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+            inputManager.hideSoftInputFromWindow(
+                activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
             )
         }
     }
@@ -154,6 +156,21 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
         Toast.makeText(context, "new task added", Toast.LENGTH_SHORT).show()
         clearForm()
         listenerNewTaskFragment?.newTaskFragmentDismiss()
+    }
+
+    override fun displayError(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun displayMissingField(field: String) {
+        when (field) {
+            "title" -> {
+                textLayoutTitle.error = resources.getString(R.string.empty_field)
+            }
+            "description" -> {
+                textLayoutDesc.error = resources.getString(R.string.empty_field)
+            }
+        }
     }
 
     interface NewTaskFragmentListener {

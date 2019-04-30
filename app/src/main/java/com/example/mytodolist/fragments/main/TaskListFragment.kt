@@ -44,7 +44,9 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
             listenerTodoList?.displayAddTaskFragment()
         }
 
+        //todo only get all tasks first time
         mainPresenter.getUserTasks()
+        //mainPresenter.getUserTasksForDisplay()
     }
 
     override fun onAttach(context: Context) {
@@ -70,6 +72,11 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
         }
     }
 
+    private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>){
+        hideMessage()
+        recyclerAdapter.setData(newTodoTaskList)
+    }
+
     private fun displayMessage(message: String){
         textViewTodoTaskList.apply {
             text = message
@@ -89,13 +96,20 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
     }
 
     //from TaskAdapter
-    override fun onTaskClick(id: String) {
+    override fun onTodoTaskClick(id: String) {
         Toast.makeText(context, "task number : ${id}", Toast.LENGTH_SHORT).show()
     }
 
+    override fun onTodoTaskChecked(todoTask: TodoTask, done: Boolean) {
+        //todo
+        mainPresenter.updateTaskDone(todoTask)
+    }
+
+
     //from MainPresenter
     override fun displayTasks(newTodoTaskList: ArrayList<TodoTask>) {
-        updateTaskList(newTodoTaskList)
+        //updateTaskList(newTodoTaskList)
+        displayTodoTaskList(newTodoTaskList)
     }
 
     override fun displayHint() {
@@ -106,6 +120,15 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
     override fun displayError(error: String) {
         //todo
         displayMessage(error)
+    }
+
+    override fun updateTodoTaskView(id: String) {
+        //recyclerAdapter.updateTodoTaskView(id)
+        //recyclerAdapter.notifyItemChanged()
+        mainPresenter.getUserTasks()
+        //mainPresenter.getUserTasksForDisplay()
+
+        //todo save tasklist when getting all of them, update when check and update adapter
     }
 
 }

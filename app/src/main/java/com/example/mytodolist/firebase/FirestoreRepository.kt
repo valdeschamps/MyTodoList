@@ -1,5 +1,6 @@
 package com.example.mytodolist.firebase
 
+import android.util.Log
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.model.User
 import com.google.android.gms.tasks.Tasks
@@ -12,10 +13,15 @@ class FirestoreRepository(): KoinComponent {
     private val firestoreDB = firebaseInfos.firestoreDB
     private val firebaseAuth = firebaseInfos.firebaseAuth
 
+    val TODOTASK_NEXTID_LAST = "last"
+    val TODOTASK_DONE = "done"
+    val TODOTASK_NEXTID = "nextID"
+
     private fun user(): FirebaseUser? {
         return firebaseInfos.currentUSer()
     }
 
+    /*
     fun createUSer(email: String, password: String): Pair<Boolean, String>{
         val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
         return try {
@@ -44,6 +50,7 @@ class FirestoreRepository(): KoinComponent {
             Pair(false, task.exception?.message?: "error auth")//todo res string
         }
     }
+    */
 
     private fun createUSerDoc(): Boolean{
         val newUser = User(user()?.email ?: "", user()?.uid ?: "")
@@ -133,6 +140,9 @@ class FirestoreRepository(): KoinComponent {
                     }
 
                     //todo sort
+                    //return Triple(true, sortTodoTasks(taskList), "")
+                    //return Triple(true, sortByOrder(taskList), "")
+                    return Triple(true, sortTodoTaskList(taskList), "")
                     return Triple(true, taskList, "")
                 }
                 return Triple(true, taskList, "empty")
@@ -146,6 +156,101 @@ class FirestoreRepository(): KoinComponent {
 
     fun getTask(){
 
+    }
+
+    private fun batchUpdateTaskOrder(newOrder: Int){
+        val batch = firestoreDB.batch()
+    }
+
+    fun updateTodoTaskDone(id: String, done: Boolean, newOrder: Int, todoTaskUpdateList: ArrayList<TodoTask>, todoTaskListOrder: Int): Boolean {
+        val batch = firestoreDB.batch()
+
+        todoTaskUpdateList.forEach {
+            val ref = firestoreDB.collection(firebaseInfos.collectionUsersName)
+                .document(user()?.uid ?: "")
+                .collection(firebaseInfos.collectionTasksName)
+                .document(it.id)
+            batch.update(ref, firebaseInfos.todoTaskPropertieOrder, it.order + todoTaskListOrder)
+        }
+
+        val mainTodoTaskRef = firestoreDB.collection(firebaseInfos.collectionUsersName)
+            .document(user()?.uid ?: "")
+            .collection(firebaseInfos.collectionTasksName)
+            .document(id)
+
+        batch
+            .update(mainTodoTaskRef, firebaseInfos.todoTaskPropertieDone, done)
+            .update(mainTodoTaskRef, firebaseInfos.todoTaskPropertieOrder, newOrder)
+
+        return try{
+            Tasks.await(batch.commit())
+            true
+        }catch (e: Exception) {
+            false
+        }
+    }
+
+    /*
+    fun updateTaskDone(id: String, done: Boolean): Boolean {
+        val updateTaskDone = firestoreDB.collection(firebaseInfos.collectionUsersName)
+            .document(user()?.uid ?: "")
+            .collection(firebaseInfos.collectionTasksName)
+            .document(id)
+            .update(firebaseInfos.todoTaskPropertieDone, done)
+
+        return try{
+            Tasks.await(updateTaskDone)
+            true
+        }catch (e: Exception) {
+            false
+        }
+    }
+    */
+
+    private fun sortTodoTasks(todoTaskList: ArrayList<TodoTask>): ArrayList<TodoTask>{
+        val sortedList = ArrayList<TodoTask>()
+        val doneList = ArrayList<TodoTask>()
+        todoTaskList.forEach {
+            if(it.done){
+                doneList.add(it)
+            }else{
+                sortedList.add(it)
+            }
+        }
+
+        sortedList.addAll(doneList)
+        return sortedList
+    }
+
+    private fun sortByOrder(todoTaskList: ArrayList<TodoTask>): ArrayList<TodoTask>{
+        val sortedList = ArrayList(todoTaskList.sortedBy{ it.order })//.reversed())
+        return sortedList
+    }
+
+    private fun sortTodoTaskList(todoTaskList: ArrayList<TodoTask>): ArrayList<TodoTask>{
+        val result = ArrayList<TodoTask>()
+        val last = todoTaskList.find { it.nextID == TODOTASK_NEXTID_LAST }
+
+        if(last!=null) {
+            var done = false
+            var previous = last
+
+            result.add(last)
+
+            while (!done){
+                val current = todoTaskList.find { it.nextID == previous?.id }
+                if(current!=null){
+                    result.add(current)
+                    previous = current
+                }else{
+                    done= true
+                }
+            }
+            result.reverse()
+        }
+
+        Log.d("test", result.toString())
+        return result
     }
 
 }

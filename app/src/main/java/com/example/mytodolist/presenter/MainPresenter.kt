@@ -1,6 +1,5 @@
 package com.example.mytodolist.presenter
 
-import com.example.mytodolist.firebase.FirestoreRepository
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.repo.FirestoreRepo
 import com.example.mytodolist.usecase.TodoTaskManager
@@ -11,31 +10,30 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 class MainPresenter() : KoinComponent {
-    private val firestoreRepository: FirestoreRepository by inject()
-    private var taskListView: TaskListPresenterListener? = null
-    private var newTaskView: NewTaskPresenterListener? = null
-
-    private var userTodoTaskList = ArrayList<TodoTask>()
-
+    private val todoTaskManager: TodoTaskManager by inject()
+    private var taskListView: TaskListView? = null
+    private var newTaskView: NewTaskView? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
 
-    private val todoTaskManager: TodoTaskManager by inject()
-
-    fun setTaskListView(taskListPresenterListener: TaskListPresenterListener?) {
-        taskListView = taskListPresenterListener
+    fun setTaskListView(taskListView: TaskListView?) {
+        this.taskListView = taskListView
     }
 
-    fun setNewTaskView(newTaskPresenterListener: NewTaskPresenterListener?) {
-        newTaskView = newTaskPresenterListener
+    fun setNewTaskView(newTaskView: NewTaskView?) {
+        this.newTaskView = newTaskView
     }
 
-    fun getUserTasks() {
+    private suspend fun getUserTasks(): ArrayList<TodoTask> {
+        return withContext(Dispatchers.Default) {
+            todoTaskManager.getAllTasks()
+        }
+    }
+
+    fun displayUserTasks() {
         scopeMain.launch {
             try {
-                val tasksList = withContext(Dispatchers.Default) {
-                    todoTaskManager.getAllTasks()
-                }
+                val tasksList = getUserTasks()
                 taskListView?.displayTasks(tasksList)
             } catch (e: FirestoreRepo.EmptyTaskResultException) {
                 taskListView?.displayHint()
@@ -52,105 +50,44 @@ class MainPresenter() : KoinComponent {
                     todoTaskManager.addNewTask(newTodoTask)
                 }
                 newTaskView?.closeNewTaskFragment()
+                //todo animation
             } catch (e: UserManager.FieldMissingException) {
-                newTaskView?.displayMissingField(e.message?: "")
-            } catch (e: FirebaseFirestoreException){
+                newTaskView?.displayMissingField(e.message ?: "")
+            } catch (e: FirebaseFirestoreException) {
                 newTaskView?.displayError("error")
             }
         }
     }
 
-    /*
-    private suspend fun getUserTasks(): Pair<Boolean, String> {
-        val result = withContext(Dispatchers.Default) {
-            firestoreRepository.getUserTodoTasksList()
-        }
-        return if (result.first && result.second.isNotEmpty()) {
-            userTodoTaskList = result.second
-            Pair(true, "")
-        } else {
-            Pair(false, result.third)
-        }
-    }
-    */
-
-    /*
-    fun getUserTasksForDisplay() {
+    fun updateTaskDone(taskId: String, oldPos: Int) {
         scopeMain.launch {
-            val result = withContext(Dispatchers.Default) { getUserTasks() }
-            if (result.first) {
-                if (userTodoTaskList.isNotEmpty()) {
-                    taskListView?.displayTasks(userTodoTaskList)
+            try {
+                withContext(Dispatchers.Default) {
+                    todoTaskManager.changeTaskPosition(taskId, true)
+                }
+                val newTodoTaskList = getUserTasks()
+                val newPos = newTodoTaskList.indexOfFirst { it.id == taskId }
+                if (newPos != oldPos) {
+                    taskListView?.moveTask(newTodoTaskList, oldPos, newPos)
                 } else {
-                    taskListView?.displayHint()
+                    displayUserTasks()
                 }
-            } else {
-                Log.d("test", "aaaaaaa")
-                taskListView?.displayError(result.second)
+            } catch (e: FirebaseFirestoreException) {
+                taskListView?.displayError("error")
             }
         }
     }
-    */
 
-    /*
-    fun getUserTasksForDisplay(){
-        scopeMain.launch {
-            val result = withContext(Dispatchers.Default) {
-                firestoreRepository.getUserTodoTasksList()
-            }
-            if(result.first){
-                if(!result.second.isEmpty()) {
-                    userTodoTaskList = result.second
-                    taskListView?.displayTasks(userTodoTaskList)
-                }else{
-                    taskListView?.displayHint()
-                }
-            }else{
-                taskListView?.displayError(result.third)
-            }
-        }
-    }
-    */
-
-    /*
-    fun addNewTask(newTodoTask: TodoTask) {
-        //todo add loading spinner
-        scopeMain.launch {
-
-            newTodoTask.nextID =
-                if (!userTodoTaskList.isEmpty()) userTodoTaskList[0].id else firestoreRepository.TODOTASK_NEXTID_LAST
-
-            val result = withContext(Dispatchers.Default) {
-                firestoreRepository.addNewTodoTask(newTodoTask)
-            }
-            if (result.first) {
-                newTaskView?.closeNewTaskFragment()
-                //todo animation on adapter
-            } else {
-                //todo display error
-            }
-        }
-    }
-    */
-
-    fun updateTaskDone(currentTodoTask: TodoTask) {
-        scopeMain.launch {
-
-
-        }
-    }
-
-    interface TaskListPresenterListener {
+    interface TaskListView {
         fun displayTasks(newTodoTaskList: ArrayList<TodoTask>)
         fun displayHint()
         fun displayError(error: String)
-        fun updateTodoTaskView(id: String)
+        fun moveTask(newTodoTaskList: ArrayList<TodoTask>, oldPos: Int, newPos: Int)
     }
 
-    interface NewTaskPresenterListener {
+    interface NewTaskView {
         fun closeNewTaskFragment()
         fun displayError(message: String)
         fun displayMissingField(field: String)
     }
-
 }

@@ -19,7 +19,7 @@ import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 
-class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskPresenterListener,
+class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView,
     TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
     private var listenerNewTaskFragment: NewTaskFragmentListener? = null
@@ -30,7 +30,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskP
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.example.mytodolist.R.layout.fragment_new_task, container, false)
+        return inflater.inflate(R.layout.fragment_new_task, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

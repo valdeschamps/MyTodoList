@@ -16,7 +16,7 @@ import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_task_list.*
 import org.koin.android.ext.android.inject
 
-class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresenter.TaskListPresenterListener {
+class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, MainPresenter.TaskListView {
     private val mainPresenter: MainPresenter by inject()
     private var listenerTodoList: TodoListFragmentListener? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
@@ -45,8 +45,7 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
         }
 
         //todo only get all tasks first time
-        mainPresenter.getUserTasks()
-        //mainPresenter.getUserTasksForDisplay()
+        mainPresenter.displayUserTasks()
     }
 
     override fun onAttach(context: Context) {
@@ -64,31 +63,28 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
         mainPresenter.setTaskListView(null)
     }
 
-    private fun updateTaskList(newTodoTaskList: ArrayList<TodoTask>){
+    private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>) {
         hideMessage()
-        recyclerAdapter.apply {
-            updateData(newTodoTaskList)
-            notifyDataSetChanged()
-        }
+        updateAdapterData(newTodoTaskList)
+        recyclerAdapter.notifyDataSetChanged()
     }
 
-    private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>){
-        hideMessage()
-        recyclerAdapter.setData(newTodoTaskList)
-    }
-
-    private fun displayMessage(message: String){
+    private fun displayMessage(message: String) {
         textViewTodoTaskList.apply {
             text = message
             visibility = View.VISIBLE
         }
     }
 
-    private fun hideMessage(){
+    private fun hideMessage() {
         textViewTodoTaskList.apply {
             text = ""
             visibility = View.INVISIBLE
         }
+    }
+
+    private fun updateAdapterData(newTodoTaskList: ArrayList<TodoTask>){
+        recyclerAdapter.setData(newTodoTaskList)
     }
 
     interface TodoListFragmentListener {
@@ -100,15 +96,12 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
         Toast.makeText(context, "task number : ${id}", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onTodoTaskChecked(todoTask: TodoTask, done: Boolean) {
-        //todo
-        mainPresenter.updateTaskDone(todoTask)
+    override fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int) {
+        mainPresenter.updateTaskDone(todoTask.id, currentPos)
     }
-
 
     //from MainPresenter
     override fun displayTasks(newTodoTaskList: ArrayList<TodoTask>) {
-        //updateTaskList(newTodoTaskList)
         displayTodoTaskList(newTodoTaskList)
     }
 
@@ -122,13 +115,8 @@ class TaskListFragment : Fragment(), TaskAdapter.OnTaskCliCkListener, MainPresen
         displayMessage(error)
     }
 
-    override fun updateTodoTaskView(id: String) {
-        //recyclerAdapter.updateTodoTaskView(id)
-        //recyclerAdapter.notifyItemChanged()
-        mainPresenter.getUserTasks()
-        //mainPresenter.getUserTasksForDisplay()
-
-        //todo save tasklist when getting all of them, update when check and update adapter
+    override fun moveTask(newTodoTaskList: ArrayList<TodoTask>, oldPos: Int, newPos: Int) {
+        updateAdapterData(newTodoTaskList)
+        recyclerAdapter.taskMove(oldPos, newPos)
     }
-
 }

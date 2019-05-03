@@ -1,6 +1,5 @@
 package com.example.mytodolist.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -14,35 +13,30 @@ import kotlinx.android.synthetic.main.taskcard.view.*
 
 class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private var todoTaskList = ArrayList<TodoTask>()
-    private val listener: OnTaskCliCkListener = taskListFragment
-
-    //todo if user check task -->  ask presenter to update task (loading + lock the task) --> when result update the view of the task
+    private val taskListFragment: TaskListFragmentInterface = taskListFragment
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var currentTaskPosition = 0
-        var taskDone = false
-        var todoTask = TodoTask()
+        private var taskDone = false
+        private var todoTask = TodoTask()
 
         init {
-            val checkSpinnerRate = 1
+            val checkSpinnerRate = 2
             var progressStatus = 0
             itemView.progressBarCheck.progress = 0
 
-            itemView.constraintLayoutCheck.setOnTouchListener { view, event ->
+            itemView.constraintLayoutCheck.setOnTouchListener { _, event ->
                 if(!taskDone) {
-                    val action: Int = MotionEventCompat.getActionMasked(event)
+                    val action: Int = MotionEventCompat.getActionMasked(event)//todo
                     if (action == MotionEvent.ACTION_UP) {
                         progressStatus = 0
                         itemView.progressBarCheck.progress = progressStatus
                     } else {
-                        Log.d("test", "$progressStatus     bar : ${itemView.progressBarCheck.progress}")
                         if (progressStatus == 100) {
                             taskDone = true
                             //todo lock task view
                             setDoneState(taskDone)
-                            Log.d("test", "DONE")
-                            listener.onTodoTaskChecked(todoTask, taskDone)
-                            //itemView.checkBoxTodoTask.isChecked = true
+                            taskListFragment.onTodoTaskChecked(todoTask, adapterPosition)
                         } else {
                             progressStatus += checkSpinnerRate
                             itemView.progressBarCheck.incrementProgressBy(checkSpinnerRate)
@@ -54,7 +48,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             }
 
             itemView.setOnClickListener {
-                listener.onTodoTaskClick(todoTask.title)
+                taskListFragment.onTodoTaskClick(todoTask.title)
             }
         }
 
@@ -62,10 +56,9 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             this.todoTask = newTodoTask
             currentTaskPosition = position
             itemView.apply{
-                textViewOrder.text = todoTask.order.toString()
                 textViewTitle.text = todoTask.title
                 textViewDeadline.text = todoTask.deadLine.toString()
-                progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar)
+                progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar)//todo
             }
         }
 
@@ -78,13 +71,16 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
         }
     }
 
-    fun updateData(newTodoTaskList: ArrayList<TodoTask>){
+    fun setData(newTodoTaskList: ArrayList<TodoTask>){
         todoTaskList = newTodoTaskList
     }
 
-    fun setData(newTodoTaskList: ArrayList<TodoTask>){
-        todoTaskList = newTodoTaskList
-        notifyDataSetChanged()
+    fun taskMove(oldPos: Int, newPos: Int){
+        notifyItemMoved(oldPos, newPos)
+    }
+
+    fun taskAdd(){
+        notifyItemInserted(0)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -102,15 +98,8 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
         return todoTaskList.size
     }
 
-    fun updateTodoTaskView(id: String){
-        //val pos = todoTaskList.find {it.id == id}
-        val pos = todoTaskList.indexOf(todoTaskList.find {it.id == id})
-        //val a =
-
-    }
-
-    interface OnTaskCliCkListener{
+    interface TaskListFragmentInterface{
         fun onTodoTaskClick(id: String)
-        fun onTodoTaskChecked(todoTask: TodoTask, done: Boolean)
+        fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int)
     }
 }

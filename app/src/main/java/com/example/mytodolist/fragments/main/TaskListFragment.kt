@@ -18,7 +18,7 @@ import org.koin.android.ext.android.inject
 
 class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, MainPresenter.TaskListView {
     private val mainPresenter: MainPresenter by inject()
-    private var listenerTodoList: TodoListFragmentListener? = null
+    private var mainActivity: TaskListFragmentInterface? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +41,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
         }
 
         floatingActionButtonAdd.setOnClickListener {
-            listenerTodoList?.displayAddTaskFragment()
+            mainActivity?.displayAddTaskFragment()
         }
 
         //todo only get all tasks first time
@@ -50,23 +50,28 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is TodoListFragmentListener) {
-            listenerTodoList = context
+        if (context is TaskListFragmentInterface) {
+            mainActivity = context
         } else {
-            throw RuntimeException("$context must implement TodoListFragmentListener")
+            throw RuntimeException("$context must implement TaskListFragmentInterface")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listenerTodoList = null
+        mainActivity = null
         mainPresenter.setTaskListView(null)
     }
 
-    private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>) {
+    private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean) {
         hideMessage()
         updateAdapterData(newTodoTaskList)
-        recyclerAdapter.notifyDataSetChanged()
+        if (insertNewTask) {
+            recyclerViewTodoTask.scrollToPosition(0)
+            recyclerAdapter.notifyItemInserted(0)
+        } else {
+            recyclerAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun displayMessage(message: String) {
@@ -83,12 +88,8 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
         }
     }
 
-    private fun updateAdapterData(newTodoTaskList: ArrayList<TodoTask>){
+    private fun updateAdapterData(newTodoTaskList: ArrayList<TodoTask>) {
         recyclerAdapter.setData(newTodoTaskList)
-    }
-
-    interface TodoListFragmentListener {
-        fun displayAddTaskFragment()
     }
 
     //from TaskAdapter
@@ -101,8 +102,8 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
     }
 
     //from MainPresenter
-    override fun displayTasks(newTodoTaskList: ArrayList<TodoTask>) {
-        displayTodoTaskList(newTodoTaskList)
+    override fun displayTasks(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean) {
+        displayTodoTaskList(newTodoTaskList, insertNewTask)
     }
 
     override fun displayHint() {
@@ -118,5 +119,9 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
     override fun moveTask(newTodoTaskList: ArrayList<TodoTask>, oldPos: Int, newPos: Int) {
         updateAdapterData(newTodoTaskList)
         recyclerAdapter.taskMove(oldPos, newPos)
+    }
+
+    interface TaskListFragmentInterface {
+        fun displayAddTaskFragment()
     }
 }

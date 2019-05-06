@@ -16,6 +16,8 @@ class MainPresenter() : KoinComponent {
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
 
+    var newTaskToDisplay = false
+
     fun setTaskListView(taskListView: TaskListView?) {
         this.taskListView = taskListView
     }
@@ -34,7 +36,8 @@ class MainPresenter() : KoinComponent {
         scopeMain.launch {
             try {
                 val tasksList = getUserTasks()
-                taskListView?.displayTasks(tasksList)
+                taskListView?.displayTasks(tasksList, newTaskToDisplay)
+                newTaskToDisplay = false
             } catch (e: FirestoreRepo.EmptyTaskResultException) {
                 taskListView?.displayHint()
             } catch (e: FirebaseFirestoreException) {
@@ -49,7 +52,10 @@ class MainPresenter() : KoinComponent {
                 withContext(Dispatchers.Default) {
                     todoTaskManager.addNewTask(newTodoTask)
                 }
+                newTaskToDisplay = true
                 newTaskView?.closeNewTaskFragment()
+
+
                 //todo animation
             } catch (e: UserManager.FieldMissingException) {
                 newTaskView?.displayMissingField(e.message ?: "")
@@ -79,7 +85,7 @@ class MainPresenter() : KoinComponent {
     }
 
     interface TaskListView {
-        fun displayTasks(newTodoTaskList: ArrayList<TodoTask>)
+        fun displayTasks(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean)
         fun displayHint()
         fun displayError(error: String)
         fun moveTask(newTodoTaskList: ArrayList<TodoTask>, oldPos: Int, newPos: Int)

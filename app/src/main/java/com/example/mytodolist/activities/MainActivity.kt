@@ -13,7 +13,7 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, TaskListFragment.TodoListFragmentListener, NewTaskFragment.NewTaskFragmentListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, TaskListFragment.TaskListFragmentInterface, NewTaskFragment.NewTaskFragmentInterface {
     private val firebaseInfos: FirebaseInfos by inject()
     private val fragmentManager = supportFragmentManager
     private val taskListFragment: TaskListFragment by lazy { TaskListFragment() }
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu)
-            setTitle("task list")
+            title = "task list" //todo
         }
     }
 
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            setTitle("new task")
+            title = "new task"
         }
     }
 

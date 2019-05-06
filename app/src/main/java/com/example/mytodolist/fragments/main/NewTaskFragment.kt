@@ -22,7 +22,7 @@ import org.koin.android.ext.android.inject
 class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView,
     TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
-    private var listenerNewTaskFragment: NewTaskFragmentListener? = null
+    private var mainActivity: NewTaskFragmentInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +72,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
                 //todo
             }
             buttonCancel -> {
-                listenerNewTaskFragment?.newTaskFragmentDismiss()
+                mainActivity?.newTaskFragmentDismiss()
             }
             buttonConfirm -> {
                 addNewTask()
@@ -82,16 +82,16 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is NewTaskFragmentListener) {
-            listenerNewTaskFragment = context
+        if (context is NewTaskFragmentInterface) {
+            mainActivity = context
         } else {
-            throw RuntimeException(context.toString() + " must implement NewTaskFragmentListener")
+            throw RuntimeException(context.toString() + " must implement NewTaskFragmentInterface")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listenerNewTaskFragment = null
+        mainActivity = null
         mainPresenter.setNewTaskView(null)
     }
 
@@ -155,7 +155,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     override fun closeNewTaskFragment() {
         Toast.makeText(context, "new task added", Toast.LENGTH_SHORT).show()
         clearForm()
-        listenerNewTaskFragment?.newTaskFragmentDismiss()
+        mainActivity?.newTaskFragmentDismiss()
     }
 
     override fun displayError(message: String) {
@@ -173,7 +173,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         }
     }
 
-    interface NewTaskFragmentListener {
+    interface NewTaskFragmentInterface {
         fun newTaskFragmentDismiss()
     }
 }

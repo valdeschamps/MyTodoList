@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.main.TaskListFragment">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:id="@+id/recyclerViewTodoTask"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:src="@android:drawable/ic_input_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/floatingActionButtonAdd" android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:id="@+id/textViewTodoTaskList"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_margin="16dp" android:textAlignment="center"/>
+</FrameLayout>

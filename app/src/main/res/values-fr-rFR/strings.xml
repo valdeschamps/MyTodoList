@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyTodoList</string>
+    <string name="signIn">Se connecter</string>
+    <string name="register">S\'enregister</string>
+    <string name="emailHint">Email</string>
+    <string name="passwordHint">Mot de passe</string>
+    <string name="passwordHintConfirm">Confirmer le mot de passe</string>
+    <string name="errorRegisterEmpty">Certains champs sont vides</string>
+    <string name="errorRegisterPwdConfirm">Erreur lors de la confirmation du mot de passe</string>
+    <string name="appbarSignOut">Déconnexion</string>
+    <string name="new_task_title">Titre</string>
+    <string name="new_task_desc">Description</string>
+    <string name="new_task_cancel">Annuler</string>
+    <string name="new_task_confirm">Confirmer</string>
+    <string name="todo_task_list_hint">Utilisez le + pour ajouter une nouvelle tâche</string>
+    <string name="back_toast_message">Appuyer à nouveau sur retour pour quitter</string>
+    <string name="empty_field">Champ vide</string>
+    <string name="title_bar_task_list">Liste des tâches</string>
+    <string name="title_bar_new_task">Nouvelle tâche</string>
+    <string name="toast_new_task">Nouvelle tâche ajoutée</string>
+</resources>

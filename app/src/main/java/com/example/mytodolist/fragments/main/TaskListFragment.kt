@@ -107,18 +107,16 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
     }
 
     override fun displayHint() {
-        //todo
         displayMessage(resources.getString(R.string.todo_task_list_hint))
     }
 
     override fun displayError(error: String) {
-        //todo
         displayMessage(error)
     }
 
     override fun moveTask(newTodoTaskList: ArrayList<TodoTask>, oldPos: Int, newPos: Int) {
         updateAdapterData(newTodoTaskList)
-        recyclerAdapter.taskMove(oldPos, newPos)
+        recyclerAdapter.notifyItemMoved(oldPos, newPos)
     }
 
     interface TaskListFragmentInterface {

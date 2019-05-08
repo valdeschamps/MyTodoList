@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.android.ext.android.inject
 
 class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, TextView.OnEditorActionListener {
-    private var listenerRegisterFragment: OnRegisterFragmentInteractionListener? = null
+    private var loginActivity: RegisterFragmentInterface? = null
     private val loginPresenter: LoginPresenter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
             val passwordConfirm = editTextPwdConfirm.text.toString()
             //todo use text layout
 
-            if(isFormValid(email, password, passwordConfirm)){
+            if (isFormValid(email, password, passwordConfirm)) {
                 loginPresenter.createUser(email, password)
             }
         }
@@ -44,21 +44,21 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnRegisterFragmentInteractionListener) {
-            listenerRegisterFragment = context
+        if (context is RegisterFragmentInterface) {
+            loginActivity = context
         } else {
-            throw RuntimeException("$context must implement OnSignInFragmentInteractionListener")
+            throw RuntimeException("$context must implement SignInFragmentInterface")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listenerRegisterFragment = null
+        loginActivity = null
         loginPresenter.setRegisterView(null)
     }
 
     override fun onEditorAction(view: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        when (view){
+        when (view) {
             editTextEmail -> {
                 editTextPwd.requestFocus()
             }
@@ -72,13 +72,13 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
         return true
     }
 
-    private fun isFormValid(email: String, password: String, passwordConfirm: String):Boolean {
-        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)){
+    private fun isFormValid(email: String, password: String, passwordConfirm: String): Boolean {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)) {
             displayErrorMessage(getString(R.string.errorRegisterEmpty))
             return false
         }
 
-        if(password != passwordConfirm){
+        if (password != passwordConfirm) {
             displayErrorMessage(getString(R.string.errorRegisterPwdConfirm))
             return false
         }
@@ -94,10 +94,10 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
     }
 
     override fun confirmRegister() {
-        listenerRegisterFragment?.goToSignInFragment()
+        loginActivity?.goToSignInFragment()
     }
 
-    interface OnRegisterFragmentInteractionListener {
+    interface RegisterFragmentInterface {
         fun goToSignInFragment()
     }
 }

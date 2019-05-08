@@ -15,7 +15,6 @@ import java.util.concurrent.ExecutionException
 class FirestoreRepo : Repository, KoinComponent {
     private val firebaseInfos: FirebaseInfos by inject()
     private val firestoreDB = firebaseInfos.firestoreDB
-
     private var tasksList = ArrayList<TodoTask>()
 
     private fun user(): FirebaseUser? {

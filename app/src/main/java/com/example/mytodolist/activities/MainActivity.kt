@@ -22,10 +22,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setSupportActionBar(toolbarmain)
         navigationViewMain.setNavigationItemSelectedListener(this)
-
         displayTaskListFragment()
     }
 
@@ -35,7 +33,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
-        if(fragmentManager.findFragmentById(R.id.frameLayoutMain) == newTaskFragment){
+        if (fragmentManager.findFragmentById(R.id.frameLayoutMain) == newTaskFragment) {
             setTopBarTaskList()
         }
 
@@ -44,11 +42,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-         return when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
-                if(fragmentManager.findFragmentById(R.id.frameLayoutMain) == newTaskFragment){
+                if (fragmentManager.findFragmentById(R.id.frameLayoutMain) == newTaskFragment) {
                     onBackPressed()
-                }else {
+                } else {
                     drawerLayoutMain.openDrawer(GravityCompat.START)
                 }
                 true
@@ -69,13 +67,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun userDisconnect(){
+    private fun userDisconnect() {
         firebaseInfos.userDisconnect()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 
-    private fun displayTaskListFragment(){
+    private fun displayTaskListFragment() {
         fragmentManager.beginTransaction().apply {
             replace(R.id.frameLayoutMain, taskListFragment)
             commit()
@@ -83,7 +81,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setTopBarTaskList()
     }
 
-    private fun displayNewTaskFragment(){
+    private fun displayNewTaskFragment() {
         fragmentManager.beginTransaction().apply {
             replace(R.id.frameLayoutMain, newTaskFragment)
             addToBackStack(null)
@@ -92,19 +90,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setTopBarNewTask()
     }
 
-    private fun setTopBarTaskList(){
+    private fun setTopBarTaskList() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu)
-            title = "task list" //todo
+            title = getString(R.string.title_bar_task_list)
         }
     }
 
-    private fun setTopBarNewTask(){
+    private fun setTopBarNewTask() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            title = "new task"
+            title = getString(R.string.title_bar_new_task)
         }
     }
 
@@ -117,5 +115,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun newTaskFragmentDismiss() {
         onBackPressed()
     }
-
 }

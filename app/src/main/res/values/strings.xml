@@ -16,4 +16,7 @@
     <string name="todo_task_list_hint">Press + to add a new task</string>
     <string name="back_toast_message">Press back again to leave</string>
     <string name="empty_field">Empty field</string>
+    <string name="title_bar_task_list">Task list</string>
+    <string name="title_bar_new_task">New task</string>
+    <string name="toast_new_task">New task added</string>
 </resources>

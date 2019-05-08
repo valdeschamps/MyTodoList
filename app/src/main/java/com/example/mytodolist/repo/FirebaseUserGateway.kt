@@ -7,8 +7,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 import java.util.concurrent.ExecutionException
 
-class FirebaseUserGateway: UserGateway, KoinComponent {
-
+class FirebaseUserGateway : UserGateway, KoinComponent {
     private val firebaseInfos: FirebaseInfos by inject()
     private val firebaseAuth = firebaseInfos.firebaseAuth
 
@@ -16,8 +15,8 @@ class FirebaseUserGateway: UserGateway, KoinComponent {
         val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
         try {
             Tasks.await(task)
-        }catch (e: ExecutionException){
-            throw e.cause?: e
+        } catch (e: ExecutionException) {
+            throw e.cause ?: e
         }
     }
 
@@ -25,8 +24,8 @@ class FirebaseUserGateway: UserGateway, KoinComponent {
         val task = firebaseAuth.signInWithEmailAndPassword(email, password)
         try {
             Tasks.await(task)
-        }catch (e: ExecutionException){
-            throw e.cause?: e
+        } catch (e: ExecutionException) {
+            throw e.cause ?: e
         }
     }
 }

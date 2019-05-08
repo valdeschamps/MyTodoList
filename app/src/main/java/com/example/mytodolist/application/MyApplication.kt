@@ -5,7 +5,7 @@ import com.example.mytodolist.di.appModule
 import com.google.firebase.FirebaseApp
 import org.koin.android.ext.android.startKoin
 
-class MyApplication: Application(){
+class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)

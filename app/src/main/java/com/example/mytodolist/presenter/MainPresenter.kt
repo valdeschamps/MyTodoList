@@ -9,7 +9,7 @@ import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class MainPresenter() : KoinComponent {
+class MainPresenter : KoinComponent {
     private val todoTaskManager: TodoTaskManager by inject()
     private var taskListView: TaskListView? = null
     private var newTaskView: NewTaskView? = null
@@ -54,9 +54,6 @@ class MainPresenter() : KoinComponent {
                 }
                 newTaskToDisplay = true
                 newTaskView?.closeNewTaskFragment()
-
-
-                //todo animation
             } catch (e: UserManager.FieldMissingException) {
                 newTaskView?.displayMissingField(e.message ?: "")
             } catch (e: FirebaseFirestoreException) {

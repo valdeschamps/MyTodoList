@@ -12,11 +12,11 @@ import com.example.mytodolist.fragments.login.SignInFragment
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.ext.android.inject
 
-class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentInteractionListener, RegisterFragment.OnRegisterFragmentInteractionListener {
+class LoginActivity : AppCompatActivity(), SignInFragment.SignInFragmentInterface, RegisterFragment.RegisterFragmentInterface {
     private val firebaseInfos: FirebaseInfos by inject()
     private val fragmentManager = supportFragmentManager
-    private val registerFragment: RegisterFragment by lazy {RegisterFragment()}
-    private val signInFragment:SignInFragment by lazy {SignInFragment()}
+    private val registerFragment: RegisterFragment by lazy { RegisterFragment() }
+    private val signInFragment: SignInFragment by lazy { SignInFragment() }
 
     private var timestampLastBask: Long = 0
     private val backDelay: Long = 15000 //10 seconds
@@ -33,9 +33,9 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
         super.onStart()
 
         //todo check using loading fragment+presenter
-        if (firebaseInfos.currentUSer() != null){
+        if (firebaseInfos.currentUSer() != null) {
             gotoMainActivity()
-        }else{
+        } else {
             displaySignInFragment()
         }
     }
@@ -46,15 +46,15 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
     }
 
     override fun onBackPressed() {
-        if(fragmentManager.findFragmentById(R.id.frameLayoutLogin) == registerFragment) {
+        if (fragmentManager.findFragmentById(R.id.frameLayoutLogin) == registerFragment) {
             setTopBarForSignIn()
             super.onBackPressed()
-        }else{
+        } else {
             val timestampCurrent = System.currentTimeMillis()
-            if ((timestampCurrent - timestampLastBask) > backDelay){
+            if ((timestampCurrent - timestampLastBask) > backDelay) {
                 timestampLastBask = timestampCurrent
-                Toast.makeText(this, resources.getString(R.string.back_toast_message), Toast.LENGTH_SHORT).show()
-            }else{
+                Toast.makeText(this, getString(R.string.back_toast_message), Toast.LENGTH_SHORT).show()
+            } else {
                 super.onBackPressed()
             }
         }
@@ -85,15 +85,15 @@ class LoginActivity : AppCompatActivity(), SignInFragment.OnSignInFragmentIntera
         setTopBarForRegister()
     }
 
-    private fun setTopBarForSignIn(){
-        supportActionBar?.apply{
+    private fun setTopBarForSignIn() {
+        supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(false)
             setTitle(R.string.signIn)
         }
     }
 
-    private fun setTopBarForRegister(){
-        supportActionBar?.apply{
+    private fun setTopBarForRegister() {
+        supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setTitle(R.string.register)
         }

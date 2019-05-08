@@ -16,4 +16,7 @@
     <string name="todo_task_list_hint">Utilisez le + pour ajouter une nouvelle tâche</string>
     <string name="back_toast_message">Appuyer à nouveau sur retour pour quitter</string>
     <string name="empty_field">Champ vide</string>
+    <string name="title_bar_task_list">Liste des tâches</string>
+    <string name="title_bar_new_task">Nouvelle tâche</string>
+    <string name="toast_new_task">Nouvelle tâche ajoutée</string>
 </resources>

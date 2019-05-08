@@ -12,11 +12,11 @@ import com.example.mytodolist.usecase.UserManager
 import org.koin.dsl.module.module
 
 val appModule = module {
-    single {FirebaseInfos()}
-    single {LoginPresenter()}
-    single {MainPresenter()}
-    single<UserGateway> {FirebaseUserGateway()}
-    single {UserManager()}
-    single<Repository> {FirestoreRepo()}
-    single {TodoTaskManager()}
+    single { FirebaseInfos() }
+    single { LoginPresenter() }
+    single { MainPresenter() }
+    single<UserGateway> { FirebaseUserGateway() }
+    single { UserManager() }
+    single<Repository> { FirestoreRepo() }
+    single { TodoTaskManager() }
 }

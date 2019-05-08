@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_sign_in.*
 import org.koin.android.ext.android.inject
 
 class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextView.OnEditorActionListener {
-    private var listenerSignInFragment: OnSignInFragmentInteractionListener? = null
+    private var loginActivity: SignInFragmentInterface? = null
     private val loginPresenter: LoginPresenter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,33 +34,33 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
         buttonSignIn.setOnClickListener {
             val email = editTextEmail.text.toString()
             val password = editTextPassword.text.toString()
-            if(isFormValid(email, password)) {
+            if (isFormValid(email, password)) {
                 loginPresenter.loginUser(email, password)
             }
         }
 
         buttonRegister.setOnClickListener {
-            listenerSignInFragment?.goToRegisterFragment()
+            loginActivity?.goToRegisterFragment()
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnSignInFragmentInteractionListener) {
-            listenerSignInFragment = context
+        if (context is SignInFragmentInterface) {
+            loginActivity = context
         } else {
-            throw RuntimeException("$context must implement OnSignInFragmentInteractionListener")
+            throw RuntimeException("$context must implement SignInFragmentInterface")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listenerSignInFragment = null
+        loginActivity = null
         loginPresenter.setLoginView(null)
     }
 
     override fun onEditorAction(view: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        when(view){
+        when (view) {
             editTextEmail -> {
                 editTextPassword.requestFocus()
             }
@@ -72,7 +72,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
     }
 
     private fun isFormValid(email: String, password: String): Boolean {
-        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             displayErrorMessage(getString(R.string.errorRegisterEmpty))
             return false
         }
@@ -88,10 +88,10 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
     }
 
     override fun connectUser() {
-        listenerSignInFragment?.connectUser()
+        loginActivity?.connectUser()
     }
 
-    interface OnSignInFragmentInteractionListener {
+    interface SignInFragmentInterface {
         fun goToRegisterFragment()
         fun connectUser()
     }

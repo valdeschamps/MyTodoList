@@ -26,7 +26,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             itemView.progressBarCheck.progress = 0
 
             itemView.constraintLayoutCheck.setOnTouchListener { _, event ->
-                if(!taskDone) {
+                if (!taskDone) {
                     val action: Int = MotionEventCompat.getActionMasked(event)//todo
                     if (action == MotionEvent.ACTION_UP) {
                         progressStatus = 0
@@ -55,14 +55,14 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
         fun displayTask(newTodoTask: TodoTask, position: Int) {
             this.todoTask = newTodoTask
             currentTaskPosition = position
-            itemView.apply{
+            itemView.apply {
                 textViewTitle.text = todoTask.title
                 textViewDeadline.text = todoTask.deadLine.toString()
                 progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar)//todo
             }
         }
 
-        fun setDoneState(done: Boolean){
+        fun setDoneState(done: Boolean) {
             taskDone = done
             itemView.apply {
                 checkBoxTodoTask.isChecked = done
@@ -71,16 +71,8 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
         }
     }
 
-    fun setData(newTodoTaskList: ArrayList<TodoTask>){
+    fun setData(newTodoTaskList: ArrayList<TodoTask>) {
         todoTaskList = newTodoTaskList
-    }
-
-    fun taskMove(oldPos: Int, newPos: Int){
-        notifyItemMoved(oldPos, newPos)
-    }
-
-    fun taskAdd(){
-        notifyItemInserted(0)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -98,7 +90,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
         return todoTaskList.size
     }
 
-    interface TaskListFragmentInterface{
+    interface TaskListFragmentInterface {
         fun onTodoTaskClick(id: String)
         fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int)
     }

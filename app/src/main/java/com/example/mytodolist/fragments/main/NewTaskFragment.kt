@@ -19,8 +19,7 @@ import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 
-class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView,
-    TextView.OnEditorActionListener {
+class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView, TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
     private var mainActivity: NewTaskFragmentInterface? = null
 
@@ -47,7 +46,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
         textInputDesc.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
@@ -85,7 +83,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         if (context is NewTaskFragmentInterface) {
             mainActivity = context
         } else {
-            throw RuntimeException(context.toString() + " must implement NewTaskFragmentInterface")
+            throw RuntimeException("$context must implement NewTaskFragmentInterface")
         }
     }
 
@@ -106,12 +104,12 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     private fun isValid(newTodoTask: TodoTask): Boolean {
         if (TextUtils.isEmpty(newTodoTask.title)) {
-            textLayoutTitle.error = resources.getString(R.string.empty_field)
+            textLayoutTitle.error = getString(R.string.empty_field)
             return false
         }
 
         if (TextUtils.isEmpty(newTodoTask.description)) {
-            textLayoutDesc.error = resources.getString(R.string.empty_field)
+            textLayoutDesc.error = getString(R.string.empty_field)
             return false
         }
         //todo check date and time
@@ -153,7 +151,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     //from mainPresenter
     override fun closeNewTaskFragment() {
-        Toast.makeText(context, "new task added", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, getString(R.string.toast_new_task), Toast.LENGTH_SHORT).show()
         clearForm()
         mainActivity?.newTaskFragmentDismiss()
     }

@@ -19,4 +19,6 @@
     <string name="title_bar_task_list">Task list</string>
     <string name="title_bar_new_task">New task</string>
     <string name="toast_new_task">New task added</string>
+    <string name="new_task_date">Date</string>
+    <string name="new_task_time">Time</string>
 </resources>

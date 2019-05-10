@@ -57,7 +57,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             currentTaskPosition = position
             itemView.apply {
                 textViewTitle.text = todoTask.title
-                textViewDeadline.text = todoTask.deadLine.toString()
+                //textViewDeadline.text = todoTask.deadLine.toString()
                 progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar)//todo
             }
         }

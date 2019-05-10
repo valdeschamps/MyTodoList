@@ -1,5 +1,7 @@
 package com.example.mytodolist.fragments.main
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -18,10 +20,15 @@ import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView, TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
     private var mainActivity: NewTaskFragmentInterface? = null
+    private val calendar: Calendar = Calendar.getInstance()
+
+    //todo on back close keyboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +45,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         textInputTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
             override fun afterTextChanged(s: Editable?) {
                 textLayoutTitle.error = null
             }
@@ -47,9 +53,24 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         textInputDesc.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
             override fun afterTextChanged(s: Editable?) {
                 textLayoutDesc.error = null
+            }
+        })
+
+        textInputDate.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                textInputDate.error = null
+            }
+        })
+
+        textInputTime.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                textInputTime.error = null
             }
         })
 
@@ -64,10 +85,10 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         closeKeyboard()
         when (view) {
             imageViewDate -> {
-                //todo
+                displayDatePicker()
             }
             imageViewTime -> {
-                //todo
+                displayTimePicker()
             }
             buttonCancel -> {
                 mainActivity?.newTaskFragmentDismiss()
@@ -98,8 +119,31 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             textInputTitle -> {
                 textInputDesc.requestFocus()
             }
+            textInputDesc -> {
+                imageViewDate.requestFocus()
+            }
+            //todo add next focus for each element
         }
         return true
+    }
+
+    private fun displayDatePicker() {
+        DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            calendar.set(year, month, dayOfMonth)
+            val date = SimpleDateFormat.getDateInstance()
+            val dateString = date.format(calendar.time)
+            textInputDate.setText(dateString)
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+    private fun displayTimePicker() {
+        TimePickerDialog(requireContext(), TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            calendar.set(Calendar.MINUTE, minute)
+            val time = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val dateString = time.format(calendar.time)
+            textInputTime.setText(dateString)
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
     }
 
     private fun isValid(newTodoTask: TodoTask): Boolean {
@@ -112,7 +156,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             textLayoutDesc.error = getString(R.string.empty_field)
             return false
         }
-        //todo check date and time
         return true
     }
 
@@ -121,6 +164,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         newTask.apply {
             title = textInputTitle.text.toString()
             description = textInputDesc.text.toString()
+            dateTimestamp = (calendar.time.time)
         }
         return newTask
     }
@@ -135,8 +179,8 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     private fun clearForm() {
         textInputTitle.setText("")
         textInputDesc.setText("")
-        textViewDate.text = ""
-        textViewTime.text = ""
+        textInputDate.setText("")
+        textInputTime.setText("")
     }
 
     private fun closeKeyboard() {
@@ -162,6 +206,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     override fun displayMissingField(field: String) {
         when (field) {
+            //todo
             "title" -> {
                 textLayoutTitle.error = resources.getString(R.string.empty_field)
             }

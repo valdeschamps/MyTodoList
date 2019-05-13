@@ -10,6 +10,9 @@ import com.example.mytodolist.R
 import com.example.mytodolist.fragments.main.TaskListFragment
 import com.example.mytodolist.model.TodoTask
 import kotlinx.android.synthetic.main.taskcard.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private var todoTaskList = ArrayList<TodoTask>()
@@ -57,7 +60,10 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             currentTaskPosition = position
             itemView.apply {
                 textViewTitle.text = todoTask.title
-                //textViewDeadline.text = todoTask.deadLine.toString()
+                textViewDate.text =
+                    SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date(todoTask.dateTimestamp))
+                textViewTime.text =
+                    SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(todoTask.dateTimestamp))
                 progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar)//todo
             }
         }

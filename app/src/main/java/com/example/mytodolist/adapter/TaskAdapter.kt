@@ -59,11 +59,20 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             this.todoTask = newTodoTask
             currentTaskPosition = position
             itemView.apply {
+                //todo description
                 textViewTitle.text = todoTask.title
-                textViewDate.text =
-                    SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date(todoTask.dateTimestamp))
-                textViewTime.text =
-                    SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(todoTask.dateTimestamp))
+                if (todoTask.dateTimestamp != -1L) {
+                    textViewDate.text =
+                        SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date(todoTask.dateTimestamp))
+                } else {
+                    textViewDate.text = ""
+                }
+                if (todoTask.timeTimestamp != -1L) {
+                    textViewTime.text =
+                        SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(todoTask.timeTimestamp))
+                } else {
+                    textViewTime.text = ""
+                }
                 progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar)//todo
             }
         }

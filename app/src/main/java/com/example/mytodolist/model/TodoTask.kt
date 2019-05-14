@@ -5,7 +5,8 @@ data class TodoTask(
     var title: String = "",
     var description: String = "",
     var createdTime: Double = 0.0,
-    var dateTimestamp: Long = 0L,
+    var dateTimestamp: Long = -1L,
+    var timeTimestamp: Long = -1L,
     var done: Boolean = false,
     var nextID: String = ""
 )

@@ -26,9 +26,11 @@ import java.util.*
 class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView, TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
     private var mainActivity: NewTaskFragmentInterface? = null
-    private val calendar: Calendar = Calendar.getInstance()
+    private var dateLong: Long = -1L
+    private var timeLong: Long = -1L
 
     //todo on back close keyboard
+    //todo add button to clean date and set to -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,21 +130,35 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     }
 
     private fun displayDatePicker() {
+        val calendar = Calendar.getInstance()
+        if (dateLong != -1L) {
+            calendar.time = Date(dateLong)
+        }
+
         DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-            calendar.set(year, month, dayOfMonth)
-            val date = SimpleDateFormat.getDateInstance()
-            val dateString = date.format(calendar.time)
+            val newCalendar = Calendar.getInstance()
+            newCalendar.set(year, month, dayOfMonth)
+            val dateString = SimpleDateFormat.getDateInstance().format(newCalendar.time)
             textInputDate.setText(dateString)
+            dateLong = newCalendar.time.time
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
 
     private fun displayTimePicker() {
+        val calendar = Calendar.getInstance()
+        if (timeLong != -1L) {
+            calendar.time = Date(timeLong)
+        }
+
         TimePickerDialog(requireContext(), TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            calendar.set(Calendar.MINUTE, minute)
-            val time = SimpleDateFormat("hh:mm a", Locale.getDefault())
-            val dateString = time.format(calendar.time)
+            val newCalendar = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hourOfDay)
+                set(Calendar.MINUTE, minute)
+            }
+            val time = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(newCalendar.time)
+            val dateString = time.format(newCalendar.time)
             textInputTime.setText(dateString)
+            timeLong = newCalendar.time.time
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
     }
 
@@ -164,7 +180,8 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         newTask.apply {
             title = textInputTitle.text.toString()
             description = textInputDesc.text.toString()
-            dateTimestamp = (calendar.time.time)
+            dateTimestamp = dateLong
+            timeTimestamp = timeLong
         }
         return newTask
     }

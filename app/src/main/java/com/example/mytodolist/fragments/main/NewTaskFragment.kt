@@ -29,7 +29,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     private var dateLong: Long = -1L
     private var timeLong: Long = -1L
 
-    //todo on back close keyboard
     //todo add button to clean date and set to -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,6 +111,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     override fun onDetach() {
         super.onDetach()
+        closeKeyboard()
         mainActivity = null
         mainPresenter.setNewTaskView(null)
     }
@@ -155,8 +155,9 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
                 set(Calendar.HOUR_OF_DAY, hourOfDay)
                 set(Calendar.MINUTE, minute)
             }
-            val time = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(newCalendar.time)
-            val dateString = time.format(newCalendar.time)
+            val dateString =
+                SimpleDateFormat("hh:mm a", Locale.getDefault()).format(newCalendar.time)
+                    .format(newCalendar.time)
             textInputTime.setText(dateString)
             timeLong = newCalendar.time.time
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()

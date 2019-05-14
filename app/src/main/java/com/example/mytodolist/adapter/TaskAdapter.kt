@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
 import com.example.mytodolist.fragments.main.TaskListFragment
@@ -30,7 +29,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
 
             itemView.constraintLayoutCheck.setOnTouchListener { _, event ->
                 if (!taskDone) {
-                    val action: Int = MotionEventCompat.getActionMasked(event)//todo
+                    val action: Int = event.actionMasked
                     if (action == MotionEvent.ACTION_UP) {
                         progressStatus = 0
                         itemView.progressBarCheck.progress = progressStatus
@@ -61,19 +60,22 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             itemView.apply {
                 textViewTitle.text = todoTask.title
                 textViewDetails.text = todoTask.details
-                if (todoTask.dateTimestamp != -1L) {
-                    textViewDate.text =
-                        SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date(todoTask.dateTimestamp))
-                } else {
-                    textViewDate.text = ""
-                }
-                if (todoTask.timeTimestamp != -1L) {
-                    textViewTime.text =
-                        SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(todoTask.timeTimestamp))
-                } else {
-                    textViewTime.text = ""
-                }
-                progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar)//todo
+
+                textViewDate.text =
+                    if (todoTask.dateTimestamp != -1L) {
+                        SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(
+                            Date(todoTask.dateTimestamp)
+                        )
+                    } else ""
+
+                textViewTime.text =
+                    if (todoTask.timeTimestamp != -1L) {
+                        SimpleDateFormat("hh:mm a", Locale.getDefault()).format(
+                            Date(todoTask.timeTimestamp)
+                        )
+                    } else ""
+
+                progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar, null)
             }
         }
 

@@ -59,8 +59,9 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             this.todoTask = newTodoTask
             currentTaskPosition = position
             itemView.apply {
-                //todo description
+                //todo details
                 textViewTitle.text = todoTask.title
+                textViewDetails.text = todoTask.details
                 if (todoTask.dateTimestamp != -1L) {
                     textViewDate.text =
                         SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Date(todoTask.dateTimestamp))

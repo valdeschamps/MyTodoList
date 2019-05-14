@@ -18,8 +18,8 @@ class TodoTaskManager : KoinComponent {
         if (newTodoTask.title.isEmpty()) {
             throw UserManager.FieldMissingException("title")
         }
-        if (newTodoTask.description.isEmpty()) {
-            throw UserManager.FieldMissingException("description")
+        if (newTodoTask.details.isEmpty()) {
+            throw UserManager.FieldMissingException("details")
         }
 
         val userTasks = repository.getLocalTasks()

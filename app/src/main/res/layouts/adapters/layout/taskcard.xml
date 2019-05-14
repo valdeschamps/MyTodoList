@@ -53,7 +53,7 @@
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewDeadline"
+            android:id="@+id/textViewDetails"
         />
     </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout

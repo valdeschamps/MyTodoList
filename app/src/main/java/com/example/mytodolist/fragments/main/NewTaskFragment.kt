@@ -168,7 +168,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             return false
         }
 
-        if (TextUtils.isEmpty(newTodoTask.description)) {
+        if (TextUtils.isEmpty(newTodoTask.details)) {
             textLayoutDesc.error = getString(R.string.empty_field)
             return false
         }
@@ -179,7 +179,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         val newTask = TodoTask()
         newTask.apply {
             title = textInputTitle.text.toString()
-            description = textInputDesc.text.toString()
+            details = textInputDesc.text.toString()
             dateTimestamp = dateLong
             timeTimestamp = timeLong
         }
@@ -198,6 +198,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         textInputDesc.setText("")
         textInputDate.setText("")
         textInputTime.setText("")
+        //todo fix date and time when newtask
     }
 
     private fun closeKeyboard() {
@@ -227,7 +228,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             "title" -> {
                 textLayoutTitle.error = resources.getString(R.string.empty_field)
             }
-            "description" -> {
+            "details" -> {
                 textLayoutDesc.error = resources.getString(R.string.empty_field)
             }
         }

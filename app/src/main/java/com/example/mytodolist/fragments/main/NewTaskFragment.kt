@@ -198,7 +198,8 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         textInputDesc.setText("")
         textInputDate.setText("")
         textInputTime.setText("")
-        //todo fix date and time when newtask
+        dateLong = -1L
+        timeLong = -1L
     }
 
     private fun closeKeyboard() {

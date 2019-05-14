@@ -59,7 +59,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             this.todoTask = newTodoTask
             currentTaskPosition = position
             itemView.apply {
-                //todo details
                 textViewTitle.text = todoTask.title
                 textViewDetails.text = todoTask.details
                 if (todoTask.dateTimestamp != -1L) {

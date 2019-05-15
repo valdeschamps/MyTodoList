@@ -13,8 +13,9 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="16dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:elevation="0dp">
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -32,7 +33,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textInputTitle" android:singleLine="true"/>
+                        android:id="@+id/textInputTitle"
+                        android:singleLine="true"
+                        android:inputType="textAutoCorrect|textCapSentences"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -46,7 +49,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textInputDesc"/>
+                        android:id="@+id/textInputDesc"
+                        android:inputType="textAutoCorrect|textCapSentences"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,8 +62,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:id="@+id/textLayoutDate" app:layout_constraintEnd_toStartOf="@+id/imageViewDate"
-                        android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                        android:id="@+id/textLayoutDate"
+                        app:layout_constraintEnd_toStartOf="@+id/imageViewDate"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         android:hint="@string/new_task_date" android:clickable="false">
@@ -75,7 +81,8 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:id="@+id/imageViewDate"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -119,9 +126,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:id="@+id/linearLayout">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:elevation="8dp"
+            android:background="@android:color/background_light">
             <Button
                 android:text="@string/new_task_cancel"
                 android:layout_width="wrap_content"

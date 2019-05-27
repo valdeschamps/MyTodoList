@@ -7,7 +7,7 @@ This is a personal project I'm developing to train my skills.
 
 ## Description
 
-A simple todo list where you can create a task and validates it when it's done.
+A simple todo list where you can create a task and validate it when it's done.
 
 Register a new account and login to access them.
 

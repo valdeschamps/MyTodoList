@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
@@ -17,6 +18,7 @@ import org.koin.android.ext.android.inject
 class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextView.OnEditorActionListener {
     private var loginActivity: SignInFragmentInterface? = null
     private val loginPresenter: LoginPresenter by inject()
+    //todo display error message for email or password
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +31,13 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        textInputEmail.setOnEditorActionListener(this)
+        textInputPassword.setOnEditorActionListener(this)
 
         progressBarLoading.visibility = View.INVISIBLE
         buttonSignIn.setOnClickListener {
-            val email = editTextEmail.text.toString()
-            val password = editTextPassword.text.toString()
+            val email = textInputEmail.text.toString()
+            val password = textInputPassword.text.toString()
             if (isFormValid(email, password)) {
                 loginPresenter.loginUser(email, password)
             }
@@ -61,11 +65,12 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
 
     override fun onEditorAction(view: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         when (view) {
-            editTextEmail -> {
-                editTextPassword.requestFocus()
+            textInputEmail -> {
+                textInputPassword.requestFocus()
             }
-            editTextPassword -> {
-                buttonSignIn.requestFocus()
+            textInputPassword -> {
+                closeKeyboard()
+                buttonSignIn.performClick()
             }
         }
         return true
@@ -81,6 +86,15 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
 
     private fun displayErrorMessage(message: String) {
         textViewSignInError.text = message
+    }
+
+    private fun closeKeyboard() {
+        if (activity?.currentFocus != null) {
+            val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
     }
 
     override fun displayConnectionError(message: String) {

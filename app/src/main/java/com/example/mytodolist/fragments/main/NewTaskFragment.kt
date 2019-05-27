@@ -29,8 +29,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     private var dateLong: Long = -1L
     private var timeLong: Long = -1L
 
-    //todo add button to clean date and set to -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter.setNewTaskView(this)
@@ -77,7 +75,9 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
         imageViewDate.setOnClickListener(this)
         imageViewTime.setOnClickListener(this)
-        //todo layout elevation
+        imageButtonDateClear.setOnClickListener(this)
+        imageButtonTimeClear.setOnClickListener(this)
+
         buttonCancel.setOnClickListener(this)
         buttonConfirm.setOnClickListener(this)
     }
@@ -90,6 +90,12 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             }
             imageViewTime -> {
                 displayTimePicker()
+            }
+            imageButtonDateClear -> {
+                clearDate()
+            }
+            imageButtonTimeClear -> {
+                clearTime()
             }
             buttonCancel -> {
                 mainActivity?.newTaskFragmentDismiss()
@@ -194,13 +200,21 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         }
     }
 
+    private fun clearDate() {
+        textInputDate.setText("")
+        dateLong = -1L
+    }
+
+    private fun clearTime() {
+        textInputTime.setText("")
+        timeLong = -1L
+    }
+
     private fun clearForm() {
         textInputTitle.setText("")
         textInputDesc.setText("")
-        textInputDate.setText("")
-        textInputTime.setText("")
-        dateLong = -1L
-        timeLong = -1L
+        clearDate()
+        clearTime()
     }
 
     private fun closeKeyboard() {

@@ -63,19 +63,34 @@
                         android:layout_height="wrap_content"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:id="@+id/textLayoutDate"
-                        app:layout_constraintEnd_toStartOf="@+id/imageViewDate"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        android:hint="@string/new_task_date" android:clickable="false">
+                        android:hint="@string/new_task_date"
+                        android:clickable="false"
+                        app:layout_constraintEnd_toStartOf="@+id/imageButtonDateClear"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintVertical_bias="0.0">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:id="@+id/textInputDate"
                             android:enabled="false"/>
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:id="@+id/imageButtonDateClear"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imageViewDate"
+                        android:layout_marginEnd="8dp"
+                        android:background="@android:color/transparent"/>
                     <ImageView
                         android:src="@android:drawable/ic_menu_my_calendar"
                         android:layout_width="48dp"
@@ -94,20 +109,34 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content" app:layout_constraintEnd_toStartOf="@+id/imageViewTime"
-                        android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:id="@+id/textLayoutTime">
+                        android:id="@+id/textLayoutTime"
+                        app:layout_constraintEnd_toStartOf="@+id/imageButtonTimeClear"
+                        android:hint="@string/new_task_time">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/new_task_time"
+                            android:layout_height="match_parent"
                             android:id="@+id/textInputTime"
                             android:enabled="false"/>
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:id="@+id/imageButtonTimeClear"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toStartOf="@+id/imageViewTime"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@android:color/transparent"/>
                     <ImageView
                         android:src="@android:drawable/ic_lock_idle_alarm"
                         android:layout_width="48dp"
@@ -118,7 +147,6 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </LinearLayout>
         </ScrollView>
         <LinearLayout

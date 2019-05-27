@@ -77,11 +77,17 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
     }
 
     private fun isFormValid(email: String, password: String): Boolean {
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            displayErrorMessage(getString(R.string.errorRegisterEmpty))
-            return false
+        var valid = true
+
+        if(TextUtils.isEmpty(email)){
+            valid = false
+            textInputEmail.error = getString(R.string.empty_field)
         }
-        return true
+        if(TextUtils.isEmpty(password)){
+            valid = false
+            textInputPassword.error = getString(R.string.empty_field)
+        }
+        return valid
     }
 
     private fun displayErrorMessage(message: String) {

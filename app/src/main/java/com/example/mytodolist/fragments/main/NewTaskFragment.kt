@@ -57,22 +57,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             }
         })
 
-        textInputDate.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                textInputDate.error = null
-            }
-        })
-
-        textInputTime.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                textInputTime.error = null
-            }
-        })
-
         imageViewDate.setOnClickListener(this)
         imageViewTime.setOnClickListener(this)
         imageButtonDateClear.setOnClickListener(this)

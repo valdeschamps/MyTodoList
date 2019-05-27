@@ -2,7 +2,9 @@ package com.example.mytodolist.fragments.login
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +35,22 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
         super.onViewCreated(view, savedInstanceState)
         textInputEmail.setOnEditorActionListener(this)
         textInputPassword.setOnEditorActionListener(this)
+
+        textInputEmail.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                textLayoutEmail.error = null
+            }
+        })
+
+        textInputPassword.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                textLayoutPassword.error = null
+            }
+        })
 
         progressBarLoading.visibility = View.INVISIBLE
         buttonSignIn.setOnClickListener {
@@ -79,13 +97,13 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
     private fun isFormValid(email: String, password: String): Boolean {
         var valid = true
 
-        if(TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(email)) {
             valid = false
-            textInputEmail.error = getString(R.string.empty_field)
+            textLayoutEmail.error = getString(R.string.empty_field)
         }
-        if(TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             valid = false
-            textInputPassword.error = getString(R.string.empty_field)
+            textLayoutPassword.error = getString(R.string.empty_field)
         }
         return valid
     }

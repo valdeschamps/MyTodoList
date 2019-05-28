@@ -2,7 +2,9 @@ package com.example.mytodolist.fragments.login
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,7 @@ import org.koin.android.ext.android.inject
 class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, TextView.OnEditorActionListener {
     private var loginActivity: RegisterFragmentInterface? = null
     private val loginPresenter: LoginPresenter by inject()
+    //todo display error for email/pwd coming from firebase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +32,38 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        textInputRegisterEmail.setOnEditorActionListener(this)
+        textInputRegisterPwd.setOnEditorActionListener(this)
+        textInputRegisterPwgCheck.setOnEditorActionListener(this)
+
+        textInputRegisterEmail.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                textLayoutRegisterEmail.error = null
+            }
+        })
+
+        textInputRegisterPwd.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                textLayoutRegisterPwd.error = null
+            }
+        })
+
+        textInputRegisterPwgCheck.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                textLayoutRegisterPwgCheck.error = null
+            }
+        })
 
         buttonConfirmRegister.setOnClickListener {
-            val email = editTextEmail.text.toString()
-            val password = editTextPwd.text.toString()
-            val passwordConfirm = editTextPwdConfirm.text.toString()
-            //todo use text layout
+            val email = textInputRegisterEmail.text.toString()
+            val password = textInputRegisterPwd.text.toString()
+            val passwordConfirm = textInputRegisterPwgCheck.text.toString()
 
             if (isFormValid(email, password, passwordConfirm)) {
                 loginPresenter.createUser(email, password)
@@ -59,30 +88,43 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
 
     override fun onEditorAction(view: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         when (view) {
-            editTextEmail -> {
-                editTextPwd.requestFocus()
+            textInputRegisterEmail -> {
+                textInputRegisterPwd.requestFocus()
             }
-            editTextPwd -> {
-                editTextPwdConfirm.requestFocus()
+            textInputRegisterPwd -> {
+                textInputRegisterPwgCheck.requestFocus()
             }
-            editTextPwdConfirm -> {
-                buttonConfirmRegister.requestFocus()
+            textInputRegisterPwgCheck -> {
+                //buttonConfirmRegister.requestFocus()
+                //close keyboard
             }
         }
         return true
     }
 
     private fun isFormValid(email: String, password: String, passwordConfirm: String): Boolean {
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)) {
-            displayErrorMessage(getString(R.string.errorRegisterEmpty))
-            return false
+        //todo optimize
+        var valid = true
+        if (TextUtils.isEmpty(email)) {
+            valid = false
+            textLayoutRegisterEmail.error = getString(R.string.empty_field)
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            valid = false
+            textLayoutRegisterPwd.error = getString(R.string.empty_field)
+        }
+
+        if (TextUtils.isEmpty(passwordConfirm)) {
+            valid = false
+            textLayoutRegisterPwgCheck.error = getString(R.string.empty_field)
         }
 
         if (password != passwordConfirm) {
+            valid = false
             displayErrorMessage(getString(R.string.errorRegisterPwdConfirm))
-            return false
         }
-        return true
+        return valid
     }
 
     private fun displayErrorMessage(message: String) {

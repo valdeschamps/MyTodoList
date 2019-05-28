@@ -33,6 +33,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBarLoading.visibility = View.INVISIBLE
         textInputEmail.setOnEditorActionListener(this)
         textInputPassword.setOnEditorActionListener(this)
 
@@ -52,7 +53,6 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
             }
         })
 
-        progressBarLoading.visibility = View.INVISIBLE
         buttonSignIn.setOnClickListener {
             val email = textInputEmail.text.toString()
             val password = textInputPassword.text.toString()

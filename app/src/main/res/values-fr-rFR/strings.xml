@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">MyTodoList</string>
     <string name="signIn">Se connecter</string>
-    <string name="register">S\'enregister</string>
+    <string name="register">Créer un nouveau compte</string>
     <string name="emailHint">Email</string>
     <string name="passwordHint">Mot de passe</string>
     <string name="passwordHintConfirm">Confirmer le mot de passe</string>
@@ -21,4 +21,5 @@
     <string name="toast_new_task">Nouvelle tâche ajoutée</string>
     <string name="new_task_date">Date</string>
     <string name="new_task_time">Horaire</string>
+    <string name="signin_title">Connection avec un compte existant</string>
 </resources>

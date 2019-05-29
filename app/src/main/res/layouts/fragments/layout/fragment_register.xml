@@ -54,7 +54,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/textLayoutRegisterPwd"
-            android:hint="@string/passwordHint">
+            android:hint="@string/passwordHint" app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -73,7 +73,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="24dp"
             android:id="@+id/textLayoutRegisterPwgCheck"
-            android:hint="@string/passwordHintConfirm">
+            android:hint="@string/passwordHintConfirm" app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

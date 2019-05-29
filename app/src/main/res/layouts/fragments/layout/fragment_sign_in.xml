@@ -50,7 +50,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/textViewSignInError"
             android:id="@+id/textLayoutPassword"
-            android:hint="@string/passwordHint">
+            android:hint="@string/passwordHint" app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

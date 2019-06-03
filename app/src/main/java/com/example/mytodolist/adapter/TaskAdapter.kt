@@ -48,10 +48,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
                 //todo set to 0 if touch out of the view
                 true
             }
-
-            itemView.setOnClickListener {
-                taskListFragment.onTodoTaskClick(todoTask.title)
-            }
         }
 
         fun displayTask(newTodoTask: TodoTask, position: Int) {
@@ -116,7 +112,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
     }
 
     interface TaskListFragmentInterface {
-        fun onTodoTaskClick(id: String)
         fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int)
     }
 }

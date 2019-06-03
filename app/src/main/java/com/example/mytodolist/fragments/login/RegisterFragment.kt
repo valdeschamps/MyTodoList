@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
@@ -34,7 +35,7 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
         super.onViewCreated(view, savedInstanceState)
         textInputRegisterEmail.setOnEditorActionListener(this)
         textInputRegisterPwd.setOnEditorActionListener(this)
-        textInputRegisterPwgCheck.setOnEditorActionListener(this)
+        textInputRegisterPwdCheck.setOnEditorActionListener(this)
 
         textInputRegisterEmail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -52,18 +53,18 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
             }
         })
 
-        textInputRegisterPwgCheck.addTextChangedListener(object : TextWatcher {
+        textInputRegisterPwdCheck.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                textLayoutRegisterPwgCheck.error = null
+                textLayoutRegisterPwdCheck.error = null
             }
         })
 
         buttonConfirmRegister.setOnClickListener {
             val email = textInputRegisterEmail.text.toString()
             val password = textInputRegisterPwd.text.toString()
-            val passwordConfirm = textInputRegisterPwgCheck.text.toString()
+            val passwordConfirm = textInputRegisterPwdCheck.text.toString()
 
             if (isFormValid(email, password, passwordConfirm)) {
                 loginPresenter.createUser(email, password)
@@ -92,11 +93,11 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
                 textInputRegisterPwd.requestFocus()
             }
             textInputRegisterPwd -> {
-                textInputRegisterPwgCheck.requestFocus()
+                textInputRegisterPwdCheck.requestFocus()
             }
-            textInputRegisterPwgCheck -> {
-                //buttonConfirmRegister.requestFocus()
-                //close keyboard
+            textInputRegisterPwdCheck -> {
+                closeKeyboard()
+                buttonConfirmRegister.requestFocus()
             }
         }
         return true
@@ -117,7 +118,7 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
 
         if (TextUtils.isEmpty(passwordConfirm)) {
             valid = false
-            textLayoutRegisterPwgCheck.error = getString(R.string.empty_field)
+            textLayoutRegisterPwdCheck.error = getString(R.string.empty_field)
         }
 
         if (password != passwordConfirm) {
@@ -129,6 +130,16 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
 
     private fun displayErrorMessage(message: String) {
         textViewError.text = message
+    }
+
+    private fun closeKeyboard() {
+        val view = activity?.currentFocus
+        if (view != null) {
+            val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
     }
 
     override fun displayRegisterError(message: String) {

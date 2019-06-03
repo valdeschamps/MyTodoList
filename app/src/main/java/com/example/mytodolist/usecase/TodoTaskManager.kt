@@ -69,11 +69,9 @@ class TodoTaskManager : KoinComponent {
 }
 
 interface Repository {
-
     fun getAllTasks(): ArrayList<TodoTask>
     fun createNewTask(todoTask: TodoTask)
     fun checkTask(id: String)
     fun getLocalTasks(): ArrayList<TodoTask>
     fun updateTasks(tasksToUpdate: ArrayList<Pair<TodoTask, String>>)
-
 }

@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.MainPresenter
+import com.example.mytodolist.presenter.MainPresenter.Companion.ERROR
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
@@ -214,7 +215,15 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     }
 
     override fun displayError(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val finalMessage: String = when (message) {
+            ERROR -> {
+                getString(R.string.error)
+            }
+            else -> {
+                message
+            }
+        }
+        Toast.makeText(this.context, finalMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun displayMissingField(field: String) {

@@ -13,6 +13,7 @@ class LoginPresenter : KoinComponent {
     private var registerView: RegisterInterfaceListener? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
+    val UNKNOWN = "unknown"
 
     fun createUser(email: String, password: String) {
         scopeMain.launch {
@@ -22,9 +23,9 @@ class LoginPresenter : KoinComponent {
                 }
                 registerView?.confirmRegister()
             } catch (e: UserManager.FieldMissingException) {
-                registerView?.displayRegisterError(e.message ?: "unknown")
+                registerView?.displayRegisterError(e.message ?: UNKNOWN)
             } catch (e: FirebaseException) {
-                registerView?.displayRegisterError(e.message ?: "unknown")
+                registerView?.displayRegisterError(e.message ?: UNKNOWN)
             }
         }
     }
@@ -37,9 +38,9 @@ class LoginPresenter : KoinComponent {
                 }
                 loginView?.connectUser()
             } catch (e: UserManager.FieldMissingException) {
-                loginView?.displayConnectionError(e.message ?: "unknown")
+                loginView?.displayConnectionError(e.message ?: UNKNOWN)
             } catch (e: FirebaseAuthInvalidCredentialsException) {
-                loginView?.displayConnectionError(e.message ?: "unknown")
+                loginView?.displayConnectionError(e.message ?: UNKNOWN)
             }
         }
     }

@@ -12,14 +12,15 @@ import com.example.mytodolist.fragments.login.SignInFragment
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.ext.android.inject
 
-class LoginActivity : AppCompatActivity(), SignInFragment.SignInFragmentInterface, RegisterFragment.RegisterFragmentInterface {
+class LoginActivity : AppCompatActivity(), SignInFragment.SignInFragmentInterface,
+    RegisterFragment.RegisterFragmentInterface {
     private val firebaseInfos: FirebaseInfos by inject()
     private val fragmentManager = supportFragmentManager
     private val registerFragment: RegisterFragment by lazy { RegisterFragment() }
     private val signInFragment: SignInFragment by lazy { SignInFragment() }
 
     private var timestampLastBask: Long = 0
-    private val backDelay: Long = 15000 //10 seconds
+    private val backDelay: Long = 15000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

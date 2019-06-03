@@ -13,7 +13,8 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, TaskListFragment.TaskListFragmentInterface, NewTaskFragment.NewTaskFragmentInterface {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    TaskListFragment.TaskListFragmentInterface, NewTaskFragment.NewTaskFragmentInterface {
     private val firebaseInfos: FirebaseInfos by inject()
     private val fragmentManager = supportFragmentManager
     private val taskListFragment: TaskListFragment by lazy { TaskListFragment() }

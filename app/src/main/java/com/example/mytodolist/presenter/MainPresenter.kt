@@ -16,6 +16,10 @@ class MainPresenter : KoinComponent {
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
 
+    companion object {
+        const val ERROR = "error"
+    }
+
     var newTaskToDisplay = false
 
     fun setTaskListView(taskListView: TaskListView?) {
@@ -41,7 +45,7 @@ class MainPresenter : KoinComponent {
             } catch (e: FirestoreRepo.EmptyTaskResultException) {
                 taskListView?.displayHint()
             } catch (e: FirebaseFirestoreException) {
-                taskListView?.displayError("error") //todo use res
+                taskListView?.displayError(ERROR)
             }
         }
     }
@@ -57,7 +61,7 @@ class MainPresenter : KoinComponent {
             } catch (e: UserManager.FieldMissingException) {
                 newTaskView?.displayMissingField(e.message ?: "")
             } catch (e: FirebaseFirestoreException) {
-                newTaskView?.displayError("error")
+                newTaskView?.displayError(ERROR)
             }
         }
     }
@@ -76,7 +80,7 @@ class MainPresenter : KoinComponent {
                     displayUserTasks()
                 }
             } catch (e: FirebaseFirestoreException) {
-                taskListView?.displayError("error")
+                taskListView?.displayError(ERROR)
             }
         }
     }

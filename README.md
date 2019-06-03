@@ -24,11 +24,8 @@ I'm trying to follow and apply the MVC pattern / clean architecture
 
 ## Screenshots
 
-<img src="screenshots/Screenshot_1.png" width="256">
-<img src="screenshots/Screenshot_2.png" width="256">
-<img src="screenshots/Screenshot_3.png" width="256">
-<img src="screenshots/Screenshot_4.png" width="256">
-<img src="screenshots/Screenshot_5.png" width="256">
+<img src="screenshots/Screenshot_1.png" width="256"><img src="screenshots/Screenshot_2.png" width="256"><img src="screenshots/Screenshot_3.png" width="256">
+<img src="screenshots/Screenshot_4.png" width="256"><img src="screenshots/Screenshot_5.png" width="256">
 
 ## Future features / Things I want to use
 

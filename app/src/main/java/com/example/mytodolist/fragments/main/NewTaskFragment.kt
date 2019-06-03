@@ -158,11 +158,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             textLayoutTitle.error = getString(R.string.empty_field)
             return false
         }
-
-        if (TextUtils.isEmpty(newTodoTask.details)) {
-            textLayoutDesc.error = getString(R.string.empty_field)
-            return false
-        }
         return true
     }
 

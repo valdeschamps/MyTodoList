@@ -3,7 +3,6 @@ package com.example.mytodolist.fragments.login
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -14,13 +13,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
+import com.example.mytodolist.presenter.LoginPresenter.Companion.EMAIL
+import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORD
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import org.koin.android.ext.android.inject
 
 class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextView.OnEditorActionListener {
     private var loginActivity: SignInFragmentInterface? = null
     private val loginPresenter: LoginPresenter by inject()
-    //todo display error message for email or password
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +56,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
         buttonSignIn.setOnClickListener {
             val email = textInputEmail.text.toString()
             val password = textInputPassword.text.toString()
-            if (isFormValid(email, password)) {
-                loginPresenter.loginUser(email, password)
-            }
+            loginPresenter.loginUser(email, password)
         }
 
         buttonRegister.setOnClickListener {
@@ -94,24 +92,6 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
         return true
     }
 
-    private fun isFormValid(email: String, password: String): Boolean {
-        var valid = true
-
-        if (TextUtils.isEmpty(email)) {
-            valid = false
-            textLayoutEmail.error = getString(R.string.empty_field)
-        }
-        if (TextUtils.isEmpty(password)) {
-            valid = false
-            textLayoutPassword.error = getString(R.string.empty_field)
-        }
-        return valid
-    }
-
-    private fun displayErrorMessage(message: String) {
-        textViewSignInError.text = message
-    }
-
     private fun closeKeyboard() {
         if (activity?.currentFocus != null) {
             val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -121,12 +101,20 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
         }
     }
 
+    //from LoginPresenter
     override fun displayConnectionError(message: String) {
-        displayErrorMessage(message)
+        textViewSignInError.text = message
     }
 
     override fun connectUser() {
         loginActivity?.connectUser()
+    }
+
+    override fun displayMissingField(field: String) {
+        when (field) {
+            EMAIL -> textLayoutEmail.error = getString(R.string.empty_field)
+            PASSWORD -> textLayoutPassword.error = getString(R.string.empty_field)
+        }
     }
 
     interface SignInFragmentInterface {

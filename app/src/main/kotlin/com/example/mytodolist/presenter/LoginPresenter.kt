@@ -13,7 +13,12 @@ class LoginPresenter : KoinComponent {
     private var registerView: RegisterInterfaceListener? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
-    val UNKNOWN = "unknown"
+
+    companion object {
+        const val UNKNOWN = "unknown"
+        const val EMAIL = "email"
+        const val PASSWORD = "password"
+    }
 
     fun createUser(email: String, password: String) {
         scopeMain.launch {
@@ -25,22 +30,38 @@ class LoginPresenter : KoinComponent {
             } catch (e: UserManager.FieldMissingException) {
                 registerView?.displayRegisterError(e.message ?: UNKNOWN)
             } catch (e: FirebaseException) {
+                //todo better error handling
                 registerView?.displayRegisterError(e.message ?: UNKNOWN)
             }
         }
     }
 
+    private fun checkLoginForm(email: String, password: String): Boolean {
+        var valid = true
+        if (email == "") {
+            valid = false
+            loginView?.displayMissingField(EMAIL)
+        }
+        if (password == "") {
+            valid = false
+            loginView?.displayMissingField(PASSWORD)
+        }
+        return valid
+    }
+
     fun loginUser(email: String, password: String) {
-        scopeMain.launch {
-            try {
-                withContext(Dispatchers.Default) {
-                    userManager.loginUser(email, password)
+        if (checkLoginForm(email, password)) {
+            scopeMain.launch {
+                try {
+                    withContext(Dispatchers.Default) {
+                        userManager.loginUser(email, password)
+                    }
+                    loginView?.connectUser()
+                } catch (e: UserManager.FieldMissingException) {
+                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
+                } catch (e: FirebaseAuthInvalidCredentialsException) {
+                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
                 }
-                loginView?.connectUser()
-            } catch (e: UserManager.FieldMissingException) {
-                loginView?.displayConnectionError(e.message ?: UNKNOWN)
-            } catch (e: FirebaseAuthInvalidCredentialsException) {
-                loginView?.displayConnectionError(e.message ?: UNKNOWN)
             }
         }
     }
@@ -55,6 +76,7 @@ class LoginPresenter : KoinComponent {
 
     interface SignInInterfaceListener {
         fun displayConnectionError(message: String)
+        fun displayMissingField(field: String)
         fun connectUser()
     }
 

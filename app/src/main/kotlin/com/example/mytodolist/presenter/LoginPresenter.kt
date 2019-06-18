@@ -9,8 +9,9 @@ import org.koin.standalone.inject
 
 class LoginPresenter : KoinComponent {
     private val userManager: UserManager by inject()
-    private var loginView: SignInInterfaceListener? = null
-    private var registerView: RegisterInterfaceListener? = null
+    private var loadingView: LoadingView? = null
+    private var loginView: SignInView? = null
+    private var registerView: RegisterView? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
 
@@ -19,6 +20,14 @@ class LoginPresenter : KoinComponent {
         const val EMAIL = "email"
         const val PASSWORD = "password"
         const val PASSWORDCONFIRMATION = "confirmPassword"
+    }
+
+    fun checkLoggedUser() {
+        if (userManager.userAlreadyLogged()) {
+            loadingView?.connectUser()
+        } else {
+            loadingView?.displaySignFragment()
+        }
     }
 
     private fun checkRegisterForm(email: String, password: String, passwordConfirmation: String): Boolean {
@@ -90,21 +99,30 @@ class LoginPresenter : KoinComponent {
         }
     }
 
-    fun setLoginView(loginView: SignInInterfaceListener?) {
+    fun setLoadingView(loadingView: LoadingView?) {
+        this.loadingView = loadingView
+    }
+
+    fun setLoginView(loginView: SignInView?) {
         this.loginView = loginView
     }
 
-    fun setRegisterView(registerView: RegisterInterfaceListener?) {
+    fun setRegisterView(registerView: RegisterView?) {
         this.registerView = registerView
     }
 
-    interface SignInInterfaceListener {
+    interface LoadingView {
+        fun connectUser()
+        fun displaySignFragment()
+    }
+
+    interface SignInView {
         fun displayConnectionError(message: String)
         fun displayMissingField(field: String)
         fun connectUser()
     }
 
-    interface RegisterInterfaceListener {
+    interface RegisterView {
         fun displayRegisterError(message: String)
         fun displayPasswordConfirmationError()
         fun displayMissingField(field: String)

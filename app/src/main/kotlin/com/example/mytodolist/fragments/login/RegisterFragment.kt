@@ -20,8 +20,8 @@ import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORDCONFIRM
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.android.ext.android.inject
 
-class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, TextView.OnEditorActionListener {
-    private var loginActivity: RegisterFragmentInterface? = null
+class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEditorActionListener {
+    private var loginActivity: LoginActivityInterface? = null
     private val loginPresenter: LoginPresenter by inject()
     //todo display error for email/pwd coming from firebase
 
@@ -75,10 +75,10 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is RegisterFragmentInterface) {
+        if (context is LoginActivityInterface) {
             loginActivity = context
         } else {
-            throw RuntimeException("$context must implement SignInFragmentInterface")
+            throw RuntimeException("$context must implement LoginActivityInterface")
         }
     }
 
@@ -136,10 +136,10 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
 
     override fun confirmRegister() {
         Toast.makeText(context, getString(R.string.toast_account_created), Toast.LENGTH_SHORT).show()
-        loginActivity?.goToSignInFragment()
+        loginActivity?.connectUser()
     }
 
-    interface RegisterFragmentInterface {
-        fun goToSignInFragment()
+    interface LoginActivityInterface {
+        fun connectUser()
     }
 }

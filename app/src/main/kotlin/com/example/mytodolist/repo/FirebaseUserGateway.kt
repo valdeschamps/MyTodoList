@@ -11,6 +11,10 @@ class FirebaseUserGateway : UserGateway, KoinComponent {
     private val firebaseInfos: FirebaseInfos by inject()
     private val firebaseAuth = firebaseInfos.firebaseAuth
 
+    override fun userAlreadyLogged(): Boolean {
+        return firebaseInfos.currentUSer() != null
+    }
+
     override fun createUser(email: String, password: String) {
         val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
         try {

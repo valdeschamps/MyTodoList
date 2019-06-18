@@ -6,6 +6,10 @@ import org.koin.standalone.inject
 class UserManager : KoinComponent {
     private val userGateway: UserGateway by inject()
 
+    fun userAlreadyLogged(): Boolean {
+        return userGateway.userAlreadyLogged()
+    }
+
     fun createUser(email: String, password: String) {
         if (email == "") {
             throw FieldMissingException("email")
@@ -28,6 +32,7 @@ class UserManager : KoinComponent {
 }
 
 interface UserGateway {
+    fun userAlreadyLogged(): Boolean
     fun createUser(email: String, password: String)
     fun loginUser(email: String, password: String)
 }

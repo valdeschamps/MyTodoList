@@ -18,8 +18,8 @@ import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORD
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import org.koin.android.ext.android.inject
 
-class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextView.OnEditorActionListener {
-    private var loginActivity: SignInFragmentInterface? = null
+class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorActionListener {
+    private var loginActivity: LoginActivityInterface? = null
     private val loginPresenter: LoginPresenter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,10 +66,10 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is SignInFragmentInterface) {
+        if (context is LoginActivityInterface) {
             loginActivity = context
         } else {
-            throw RuntimeException("$context must implement SignInFragmentInterface")
+            throw RuntimeException("$context must implement LoginActivityInterface")
         }
     }
 
@@ -117,7 +117,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInInterfaceListener, TextV
         }
     }
 
-    interface SignInFragmentInterface {
+    interface LoginActivityInterface {
         fun goToRegisterFragment()
         fun connectUser()
     }

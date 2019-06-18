@@ -5,16 +5,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mytodolist.R
-import com.example.mytodolist.firebase.FirebaseInfos
 import com.example.mytodolist.fragments.login.LoadingFragment
 import com.example.mytodolist.fragments.login.RegisterFragment
 import com.example.mytodolist.fragments.login.SignInFragment
 import kotlinx.android.synthetic.main.activity_login.*
-import org.koin.android.ext.android.inject
 
-class LoginActivity : AppCompatActivity(), SignInFragment.SignInFragmentInterface,
-    RegisterFragment.RegisterFragmentInterface {
-    private val firebaseInfos: FirebaseInfos by inject()
+class LoginActivity : AppCompatActivity(), SignInFragment.LoginActivityInterface,
+    RegisterFragment.LoginActivityInterface, LoadingFragment.LoginActivityInterface {
     private val fragmentManager = supportFragmentManager
     private val registerFragment: RegisterFragment by lazy { RegisterFragment() }
     private val signInFragment: SignInFragment by lazy { SignInFragment() }
@@ -28,17 +25,6 @@ class LoginActivity : AppCompatActivity(), SignInFragment.SignInFragmentInterfac
         setSupportActionBar(toolbarLogin)
 
         displayLoadingFragment()
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        //todo check using loading fragment+presenter
-        if (firebaseInfos.currentUSer() != null) {
-            gotoMainActivity()
-        } else {
-            displaySignInFragment()
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -105,15 +91,18 @@ class LoginActivity : AppCompatActivity(), SignInFragment.SignInFragmentInterfac
         startActivity(intent)
     }
 
-    override fun connectUser() {
-        gotoMainActivity()
-    }
-
+    //from SignInFragment
     override fun goToRegisterFragment() {
         displayRegisterFragment()
     }
 
+    //from LoadingFragment
     override fun goToSignInFragment() {
-        onBackPressed()
+        displaySignInFragment()
+    }
+
+    //from LoadingFragment, SignInFragment, RegisterFragment
+    override fun connectUser() {
+        gotoMainActivity()
     }
 }

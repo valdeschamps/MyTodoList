@@ -85,6 +85,11 @@ class MainPresenter : KoinComponent {
         }
     }
 
+    fun disconnectUser(){
+        val userManager: UserManager by inject()
+        userManager.disconnectUser()
+    }
+
     interface TaskListView {
         fun displayTasks(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean)
         fun displayHint()

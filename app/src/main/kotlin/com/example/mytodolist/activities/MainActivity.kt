@@ -6,16 +6,15 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.example.mytodolist.R
-import com.example.mytodolist.firebase.FirebaseInfos
 import com.example.mytodolist.fragments.main.NewTaskFragment
 import com.example.mytodolist.fragments.main.TaskListFragment
+import com.example.mytodolist.presenter.MainPresenter
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     TaskListFragment.TaskListFragmentInterface, NewTaskFragment.NewTaskFragmentInterface {
-    private val firebaseInfos: FirebaseInfos by inject()
     private val fragmentManager = supportFragmentManager
     private val taskListFragment: TaskListFragment by lazy { TaskListFragment() }
     private val newTaskFragment: NewTaskFragment by lazy { NewTaskFragment() }
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.itemSignOut -> {
-                userDisconnect()
+                signOut()
             }
             R.id.itemOptions -> {
                 //todo
@@ -68,10 +67,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun userDisconnect() {
-        firebaseInfos.userDisconnect()
+    private fun signOut() {
+        val mainPresenter: MainPresenter by inject()
+        mainPresenter.disconnectUser()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+        this.finish()
     }
 
     private fun displayTaskListFragment() {

@@ -89,6 +89,7 @@ class LoginActivity : AppCompatActivity(), SignInFragment.LoginActivityInterface
     private fun gotoMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        this.finish()
     }
 
     //from SignInFragment

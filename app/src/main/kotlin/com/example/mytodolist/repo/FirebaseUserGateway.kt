@@ -9,14 +9,17 @@ import java.util.concurrent.ExecutionException
 
 class FirebaseUserGateway : UserGateway, KoinComponent {
     private val firebaseInfos: FirebaseInfos by inject()
-    private val firebaseAuth = firebaseInfos.firebaseAuth
+
+    override fun disconnectUser() {
+        firebaseInfos.userDisconnect()
+    }
 
     override fun userAlreadyLogged(): Boolean {
         return firebaseInfos.currentUSer() != null
     }
 
     override fun createUser(email: String, password: String) {
-        val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
+        val task = firebaseInfos.getFirebaseAuth().createUserWithEmailAndPassword(email, password)
         try {
             Tasks.await(task)
         } catch (e: ExecutionException) {
@@ -25,7 +28,7 @@ class FirebaseUserGateway : UserGateway, KoinComponent {
     }
 
     override fun loginUser(email: String, password: String) {
-        val task = firebaseAuth.signInWithEmailAndPassword(email, password)
+        val task = firebaseInfos.getFirebaseAuth().signInWithEmailAndPassword(email, password)
         try {
             Tasks.await(task)
         } catch (e: ExecutionException) {

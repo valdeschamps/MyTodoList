@@ -28,6 +28,10 @@ class UserManager : KoinComponent {
         userGateway.loginUser(email, password)
     }
 
+    fun disconnectUser(){
+        userGateway.disconnectUser()
+    }
+
     class FieldMissingException(message: String) : IllegalArgumentException(message)
 }
 
@@ -35,4 +39,5 @@ interface UserGateway {
     fun userAlreadyLogged(): Boolean
     fun createUser(email: String, password: String)
     fun loginUser(email: String, password: String)
+    fun disconnectUser()
 }

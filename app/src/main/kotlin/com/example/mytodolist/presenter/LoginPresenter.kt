@@ -18,20 +18,44 @@ class LoginPresenter : KoinComponent {
         const val UNKNOWN = "unknown"
         const val EMAIL = "email"
         const val PASSWORD = "password"
+        const val PASSWORDCONFIRMATION = "confirmPassword"
     }
 
-    fun createUser(email: String, password: String) {
-        scopeMain.launch {
-            try {
-                withContext(Dispatchers.Default) {
-                    userManager.createUser(email, password)
+    private fun checkRegisterForm(email: String, password: String, passwordConfirmation: String): Boolean {
+        var valid = true
+        if (email == "") {
+            valid = false
+            registerView?.displayMissingField(EMAIL)
+        }
+        if (password == "") {
+            valid = false
+            registerView?.displayMissingField(PASSWORD)
+        }
+        if (passwordConfirmation == "") {
+            valid = false
+            registerView?.displayMissingField(PASSWORDCONFIRMATION)
+        }
+        if (password != passwordConfirmation) {
+            valid = false
+            registerView?.displayPasswordConfirmationError()
+        }
+        return valid
+    }
+
+    fun createUser(email: String, password: String, passwordConfirmation: String) {
+        if (checkRegisterForm(email, password, passwordConfirmation)) {
+            scopeMain.launch {
+                try {
+                    withContext(Dispatchers.Default) {
+                        userManager.createUser(email, password)
+                    }
+                    registerView?.confirmRegister()
+                } catch (e: UserManager.FieldMissingException) {
+                    registerView?.displayRegisterError(e.message ?: UNKNOWN)
+                } catch (e: FirebaseException) {
+                    //todo better error handling
+                    registerView?.displayRegisterError(e.message ?: UNKNOWN)
                 }
-                registerView?.confirmRegister()
-            } catch (e: UserManager.FieldMissingException) {
-                registerView?.displayRegisterError(e.message ?: UNKNOWN)
-            } catch (e: FirebaseException) {
-                //todo better error handling
-                registerView?.displayRegisterError(e.message ?: UNKNOWN)
             }
         }
     }
@@ -82,6 +106,8 @@ class LoginPresenter : KoinComponent {
 
     interface RegisterInterfaceListener {
         fun displayRegisterError(message: String)
+        fun displayPasswordConfirmationError()
+        fun displayMissingField(field: String)
         fun confirmRegister()
     }
 }

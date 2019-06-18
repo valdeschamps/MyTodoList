@@ -24,4 +24,5 @@
     <string name="signin_title">Connection avec un compte existant</string>
     <string name="register_create_account">Créer compte</string>
     <string name="error">Erreur</string>
+    <string name="toast_account_created">Compte créé</string>
 </resources>

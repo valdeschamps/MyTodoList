@@ -24,4 +24,5 @@
     <string name="signin_title">Sign in with an existing account</string>
     <string name="register_create_account">Create account</string>
     <string name="error">Error</string>
+    <string name="toast_account_created">Account created</string>
 </resources>

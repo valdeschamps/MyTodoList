@@ -3,7 +3,6 @@ package com.example.mytodolist.fragments.login
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -11,9 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
+import com.example.mytodolist.presenter.LoginPresenter.Companion.EMAIL
+import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORD
+import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORDCONFIRMATION
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.android.ext.android.inject
 
@@ -66,9 +69,7 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
             val password = textInputRegisterPwd.text.toString()
             val passwordConfirm = textInputRegisterPwdCheck.text.toString()
 
-            if (isFormValid(email, password, passwordConfirm)) {
-                loginPresenter.createUser(email, password)
-            }
+            loginPresenter.createUser(email, password, passwordConfirm)
         }
     }
 
@@ -103,31 +104,6 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
         return true
     }
 
-    private fun isFormValid(email: String, password: String, passwordConfirm: String): Boolean {
-        //todo optimize
-        var valid = true
-        if (TextUtils.isEmpty(email)) {
-            valid = false
-            textLayoutRegisterEmail.error = getString(R.string.empty_field)
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            valid = false
-            textLayoutRegisterPwd.error = getString(R.string.empty_field)
-        }
-
-        if (TextUtils.isEmpty(passwordConfirm)) {
-            valid = false
-            textLayoutRegisterPwdCheck.error = getString(R.string.empty_field)
-        }
-
-        if (password != passwordConfirm) {
-            valid = false
-            displayErrorMessage(getString(R.string.errorRegisterPwdConfirm))
-        }
-        return valid
-    }
-
     private fun displayErrorMessage(message: String) {
         textViewError.text = message
     }
@@ -146,7 +122,20 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterInterfaceListener, T
         displayErrorMessage(message)
     }
 
+    override fun displayMissingField(field: String) {
+        when (field) {
+            EMAIL -> textLayoutRegisterEmail.error = getString(R.string.empty_field)
+            PASSWORD -> textLayoutRegisterPwd.error = getString(R.string.empty_field)
+            PASSWORDCONFIRMATION -> textLayoutRegisterPwdCheck.error = getString(R.string.empty_field)
+        }
+    }
+
+    override fun displayPasswordConfirmationError() {
+        displayErrorMessage(getString(R.string.errorRegisterPwdConfirm))
+    }
+
     override fun confirmRegister() {
+        Toast.makeText(context, getString(R.string.toast_account_created), Toast.LENGTH_SHORT).show()
         loginActivity?.goToSignInFragment()
     }
 

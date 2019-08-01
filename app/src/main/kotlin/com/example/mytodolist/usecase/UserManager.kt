@@ -1,7 +1,7 @@
 package com.example.mytodolist.usecase
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class UserManager : KoinComponent {
     private val userGateway: UserGateway by inject()

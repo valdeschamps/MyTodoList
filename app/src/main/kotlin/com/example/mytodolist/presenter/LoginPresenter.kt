@@ -4,8 +4,8 @@ import com.example.mytodolist.usecase.UserManager
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import kotlinx.coroutines.*
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class LoginPresenter : KoinComponent {
     private val userManager: UserManager by inject()

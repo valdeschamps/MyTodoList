@@ -8,8 +8,8 @@ import com.example.mytodolist.usecase.TodoTaskManager.Companion.TODOTASK_DONE
 import com.example.mytodolist.usecase.TodoTaskManager.Companion.TODOTASK_NEXTID
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseUser
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.concurrent.ExecutionException
 
 class FirestoreRepo : Repository, KoinComponent {

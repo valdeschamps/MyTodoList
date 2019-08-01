@@ -6,8 +6,8 @@ import com.example.mytodolist.usecase.TodoTaskManager
 import com.example.mytodolist.usecase.UserManager
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.*
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class MainPresenter : KoinComponent {
     private val todoTaskManager: TodoTaskManager by inject()

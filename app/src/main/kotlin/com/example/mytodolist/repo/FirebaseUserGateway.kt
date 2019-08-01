@@ -3,8 +3,8 @@ package com.example.mytodolist.repo
 import com.example.mytodolist.firebase.FirebaseInfos
 import com.example.mytodolist.usecase.UserGateway
 import com.google.android.gms.tasks.Tasks
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.concurrent.ExecutionException
 
 class FirebaseUserGateway : UserGateway, KoinComponent {

@@ -9,7 +9,7 @@ import com.example.mytodolist.usecase.Repository
 import com.example.mytodolist.usecase.TodoTaskManager
 import com.example.mytodolist.usecase.UserGateway
 import com.example.mytodolist.usecase.UserManager
-import org.koin.dsl.module.module
+import org.koin.dsl.module
 
 val appModule = module {
     single { FirebaseInfos() }

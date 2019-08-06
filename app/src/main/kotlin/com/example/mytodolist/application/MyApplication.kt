@@ -9,6 +9,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
-        startKoin {listOf(appModule)}
+        startKoin {
+            modules(appModule)
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.mytodolist.presenter
 
 import com.example.mytodolist.usecase.UserManager
 import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import kotlinx.coroutines.*
 import org.koin.core.KoinComponent
@@ -93,6 +94,8 @@ class LoginPresenter : KoinComponent {
                 } catch (e: UserManager.FieldMissingException) {
                     loginView?.displayConnectionError(e.message ?: UNKNOWN)
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
+                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
+                } catch (e: FirebaseNetworkException){
                     loginView?.displayConnectionError(e.message ?: UNKNOWN)
                 }
             }

@@ -23,10 +23,9 @@ class FirestoreRepo : Repository, KoinComponent {
 
     private fun createUserDoc() {
         val newUser = User(user()?.email ?: "", user()?.uid ?: "")
-        val createUserDocTask = firestoreDB.collection(firebaseInfos.collectionUsersName)
+        firestoreDB.collection(firebaseInfos.collectionUsersName)
             .document(newUser.uid)
             .set(newUser)
-        Tasks.await(createUserDocTask)
     }
 
     private fun checkUserDocExist(): Boolean {
@@ -67,8 +66,7 @@ class FirestoreRepo : Repository, KoinComponent {
                 .document()
 
             todoTask.id = docRef.id
-            val addTodoTask = docRef.set(todoTask)
-            Tasks.await(addTodoTask)
+            docRef.set(todoTask)
         } catch (e: ExecutionException) {
             throw e.cause ?: e
         }
@@ -100,10 +98,6 @@ class FirestoreRepo : Repository, KoinComponent {
         }
     }
 
-    override fun checkTask(id: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun getLocalTasks(): ArrayList<TodoTask> {
         return tasksList
     }
@@ -126,8 +120,7 @@ class FirestoreRepo : Repository, KoinComponent {
                     }
                 }
             }
-            val batchTask = batch.commit()
-            Tasks.await(batchTask)
+            batch.commit()
         } catch (e: ExecutionException) {
             throw e.cause ?: e
         }

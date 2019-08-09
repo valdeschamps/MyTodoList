@@ -5,7 +5,6 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class TodoTaskManager : KoinComponent {
-
     private val repository: Repository by inject()
 
     companion object {
@@ -71,7 +70,6 @@ class TodoTaskManager : KoinComponent {
 interface Repository {
     fun getAllTasks(): ArrayList<TodoTask>
     fun createNewTask(todoTask: TodoTask)
-    fun checkTask(id: String)
     fun getLocalTasks(): ArrayList<TodoTask>
     fun updateTasks(tasksToUpdate: ArrayList<Pair<TodoTask, String>>)
 }

@@ -4,6 +4,7 @@ import com.example.mytodolist.usecase.UserManager
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -96,6 +97,8 @@ class LoginPresenter : KoinComponent {
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
                     loginView?.displayConnectionError(e.message ?: UNKNOWN)
                 } catch (e: FirebaseNetworkException){
+                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
+                } catch (e: FirebaseAuthInvalidUserException){
                     loginView?.displayConnectionError(e.message ?: UNKNOWN)
                 }
             }

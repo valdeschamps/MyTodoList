@@ -22,6 +22,10 @@ class LoginPresenter : KoinComponent {
         const val EMAIL = "email"
         const val PASSWORD = "password"
         const val PASSWORDCONFIRMATION = "confirmPassword"
+        const val ERROR_INVALIDCRED = "ERROR_INVALIDCRED"
+        const val ERROR_NETWORK = "ERROR_NETWORK"
+        const val ERROR_INVALIDUSER = "ERROR_INVALIDUSER"
+        const val ERROR_FIELDMISSING = "ERROR_FIELDMISSING"
     }
 
     fun checkLoggedUser() {
@@ -93,13 +97,13 @@ class LoginPresenter : KoinComponent {
                     }
                     loginView?.connectUser()
                 } catch (e: UserManager.FieldMissingException) {
-                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
+                    loginView?.displayError(ERROR_FIELDMISSING)
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
-                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
+                    loginView?.displayError(ERROR_INVALIDCRED)
                 } catch (e: FirebaseNetworkException){
-                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
+                    loginView?.displayError(ERROR_NETWORK)
                 } catch (e: FirebaseAuthInvalidUserException){
-                    loginView?.displayConnectionError(e.message ?: UNKNOWN)
+                    loginView?.displayError(ERROR_INVALIDUSER)
                 }
             }
         }
@@ -123,7 +127,7 @@ class LoginPresenter : KoinComponent {
     }
 
     interface SignInView {
-        fun displayConnectionError(message: String)
+        fun displayError(code: String)
         fun displayMissingField(field: String)
         fun connectUser()
     }

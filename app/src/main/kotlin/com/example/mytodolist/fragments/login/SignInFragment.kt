@@ -14,6 +14,10 @@ import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
 import com.example.mytodolist.presenter.LoginPresenter.Companion.EMAIL
+import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_FIELDMISSING
+import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDCRED
+import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDUSER
+import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_NETWORK
 import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORD
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import org.koin.android.ext.android.inject
@@ -102,8 +106,13 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
     }
 
     //from LoginPresenter
-    override fun displayConnectionError(message: String) {
-        textViewSignInError.text = message
+    override fun displayError(code: String) {
+        when(code){
+            ERROR_FIELDMISSING -> textViewSignInError.text = getString(R.string.ERROR_FIELDMISSING)
+            ERROR_INVALIDCRED -> textViewSignInError.text = getString(R.string.ERROR_INVALIDCRED)
+            ERROR_NETWORK -> textViewSignInError.text = getString(R.string.ERROR_NETWORK)
+            ERROR_INVALIDUSER -> textViewSignInError.text = getString(R.string.ERROR_INVALIDUSER)
+        }
     }
 
     override fun connectUser() {

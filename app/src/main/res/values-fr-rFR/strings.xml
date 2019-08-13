@@ -25,4 +25,8 @@
     <string name="register_create_account">Créer compte</string>
     <string name="error">Erreur</string>
     <string name="toast_account_created">Compte créé</string>
+    <string name="ERROR_FIELDMISSING">Certains champs sont vides</string>
+    <string name="ERROR_INVALIDUSER">Utilisateur invalid</string>
+    <string name="ERROR_NETWORK">Erreur de connexion</string>
+    <string name="ERROR_INVALIDCRED">Identifiants incorrects</string>
 </resources>

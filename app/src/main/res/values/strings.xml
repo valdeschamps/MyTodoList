@@ -25,4 +25,8 @@
     <string name="register_create_account">Create account</string>
     <string name="error">Error</string>
     <string name="toast_account_created">Account created</string>
+    <string name="ERROR_FIELDMISSING">Some fields are empty</string>
+    <string name="ERROR_INVALIDUSER">Invalid user</string>
+    <string name="ERROR_NETWORK">Network error</string>
+    <string name="ERROR_INVALIDCRED">Invalids credentials</string>
 </resources>

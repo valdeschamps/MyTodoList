@@ -1,6 +1,7 @@
 package com.example.mytodolist.presenter
 
 import com.example.mytodolist.usecase.UserManager
+import com.example.mytodolist.utils.FieldMissingException
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -65,7 +66,7 @@ class LoginPresenter : KoinComponent {
                         userManager.createUser(email, password)
                     }
                     registerView?.confirmRegister()
-                } catch (e: UserManager.FieldMissingException) {
+                } catch (e: FieldMissingException) {
                     registerView?.displayRegisterError(e.message ?: UNKNOWN)
                 } catch (e: FirebaseException) {
                     //todo better error handling
@@ -96,7 +97,7 @@ class LoginPresenter : KoinComponent {
                         userManager.loginUser(email, password)
                     }
                     loginView?.connectUser()
-                } catch (e: UserManager.FieldMissingException) {
+                } catch (e: FieldMissingException) {
                     loginView?.displayError(ERROR_FIELDMISSING)
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
                     loginView?.displayError(ERROR_INVALIDCRED)

@@ -1,6 +1,8 @@
 package com.example.mytodolist.usecase
 
 import com.example.mytodolist.model.TodoTask
+import com.example.mytodolist.utils.FieldMissingException
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_TITLE
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -15,7 +17,7 @@ class TodoTaskManager : KoinComponent {
 
     fun addNewTask(newTodoTask: TodoTask) {
         if (newTodoTask.title.isEmpty()) {
-            throw UserManager.FieldMissingException("title")
+            throw FieldMissingException(FIELD_TITLE)
         }
 
         val userTasks = repository.getLocalTasks()

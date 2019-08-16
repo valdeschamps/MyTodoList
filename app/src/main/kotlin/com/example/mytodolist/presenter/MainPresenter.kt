@@ -4,6 +4,7 @@ import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.repo.FirestoreRepo
 import com.example.mytodolist.usecase.TodoTaskManager
 import com.example.mytodolist.usecase.UserManager
+import com.example.mytodolist.utils.FieldMissingException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.*
 import org.koin.core.KoinComponent
@@ -58,7 +59,7 @@ class MainPresenter : KoinComponent {
                 }
                 newTaskToDisplay = true
                 newTaskView?.closeNewTaskFragment()
-            } catch (e: UserManager.FieldMissingException) {
+            } catch (e: FieldMissingException) {
                 newTaskView?.displayMissingField(e.message ?: "")
             } catch (e: FirebaseFirestoreException) {
                 newTaskView?.displayError(ERROR)

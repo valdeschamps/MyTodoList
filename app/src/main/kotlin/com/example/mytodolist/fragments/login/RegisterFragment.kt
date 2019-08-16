@@ -118,6 +118,7 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
         }
     }
 
+    //from LoginPresenter
     override fun displayRegisterError(message: String) {
         displayErrorMessage(message)
     }

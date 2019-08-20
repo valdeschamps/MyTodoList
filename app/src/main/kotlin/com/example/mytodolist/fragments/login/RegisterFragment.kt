@@ -14,9 +14,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
-import com.example.mytodolist.presenter.LoginPresenter.Companion.EMAIL
-import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORD
-import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORDCONFIRMATION
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_EMAIL
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_PASSWORD
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_PASSWORD_CONFIRM
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.android.ext.android.inject
 
@@ -125,9 +125,9 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
 
     override fun displayMissingField(field: String) {
         when (field) {
-            EMAIL -> textLayoutRegisterEmail.error = getString(R.string.empty_field)
-            PASSWORD -> textLayoutRegisterPwd.error = getString(R.string.empty_field)
-            PASSWORDCONFIRMATION -> textLayoutRegisterPwdCheck.error = getString(R.string.empty_field)
+            FIELD_EMAIL -> textLayoutRegisterEmail.error = getString(R.string.empty_field)
+            FIELD_PASSWORD -> textLayoutRegisterPwd.error = getString(R.string.empty_field)
+            FIELD_PASSWORD_CONFIRM -> textLayoutRegisterPwdCheck.error = getString(R.string.empty_field)
         }
     }
 

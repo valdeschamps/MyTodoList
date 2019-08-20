@@ -19,6 +19,7 @@ import com.example.mytodolist.R
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.MainPresenter
 import com.example.mytodolist.presenter.MainPresenter.Companion.ERROR
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_TITLE
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
@@ -228,12 +229,8 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     override fun displayMissingField(field: String) {
         when (field) {
-            //todo
-            "title" -> {
+            FIELD_TITLE -> {
                 textLayoutTitle.error = resources.getString(R.string.empty_field)
-            }
-            "details" -> {
-                textLayoutDesc.error = resources.getString(R.string.empty_field)
             }
         }
     }

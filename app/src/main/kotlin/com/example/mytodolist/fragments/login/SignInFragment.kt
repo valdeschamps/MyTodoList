@@ -13,12 +13,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
-import com.example.mytodolist.presenter.LoginPresenter.Companion.EMAIL
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_FIELDMISSING
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDCRED
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDUSER
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_NETWORK
-import com.example.mytodolist.presenter.LoginPresenter.Companion.PASSWORD
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_EMAIL
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_PASSWORD
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import org.koin.android.ext.android.inject
 
@@ -121,8 +121,8 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
 
     override fun displayMissingField(field: String) {
         when (field) {
-            EMAIL -> textLayoutEmail.error = getString(R.string.empty_field)
-            PASSWORD -> textLayoutPassword.error = getString(R.string.empty_field)
+            FIELD_EMAIL -> textLayoutEmail.error = getString(R.string.empty_field)
+            FIELD_PASSWORD -> textLayoutPassword.error = getString(R.string.empty_field)
         }
     }
 

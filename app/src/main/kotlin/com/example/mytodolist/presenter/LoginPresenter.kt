@@ -2,6 +2,9 @@ package com.example.mytodolist.presenter
 
 import com.example.mytodolist.usecase.UserManager
 import com.example.mytodolist.utils.FieldMissingException
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_EMAIL
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_PASSWORD
+import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_PASSWORD_CONFIRM
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -20,9 +23,6 @@ class LoginPresenter : KoinComponent {
 
     companion object {
         const val UNKNOWN = "unknown"
-        const val EMAIL = "email"
-        const val PASSWORD = "password"
-        const val PASSWORDCONFIRMATION = "confirmPassword"
         const val ERROR_INVALIDCRED = "ERROR_INVALIDCRED"
         const val ERROR_NETWORK = "ERROR_NETWORK"
         const val ERROR_INVALIDUSER = "ERROR_INVALIDUSER"
@@ -41,15 +41,15 @@ class LoginPresenter : KoinComponent {
         var valid = true
         if (email == "") {
             valid = false
-            registerView?.displayMissingField(EMAIL)
+            registerView?.displayMissingField(FIELD_EMAIL)
         }
         if (password == "") {
             valid = false
-            registerView?.displayMissingField(PASSWORD)
+            registerView?.displayMissingField(FIELD_PASSWORD)
         }
         if (passwordConfirmation == "") {
             valid = false
-            registerView?.displayMissingField(PASSWORDCONFIRMATION)
+            registerView?.displayMissingField(FIELD_PASSWORD_CONFIRM)
         }
         if (password != passwordConfirmation) {
             valid = false
@@ -80,11 +80,11 @@ class LoginPresenter : KoinComponent {
         var valid = true
         if (email == "") {
             valid = false
-            loginView?.displayMissingField(EMAIL)
+            loginView?.displayMissingField(FIELD_EMAIL)
         }
         if (password == "") {
             valid = false
-            loginView?.displayMissingField(PASSWORD)
+            loginView?.displayMissingField(FIELD_PASSWORD)
         }
         return valid
     }

@@ -9,29 +9,29 @@ import org.koin.core.inject
 class UserManager : KoinComponent {
     private val userGateway: UserGateway by inject()
 
+    private fun checkEmailPwd(email: String, password: String) {
+        if (email == "") {
+            throw FieldMissingException(FIELD_EMAIL)
+        } else if (password == "") {
+            throw FieldMissingException(FIELD_PASSWORD)
+        }
+    }
+
     fun userAlreadyLogged(): Boolean {
         return userGateway.userAlreadyLogged()
     }
 
     fun createUser(email: String, password: String) {
-        if (email == "") {
-            throw FieldMissingException(FIELD_EMAIL)
-        } else if (password == "") {
-            throw FieldMissingException(FIELD_PASSWORD)
-        }
+        checkEmailPwd(email, password)
         userGateway.createUser(email, password)
     }
 
     fun loginUser(email: String, password: String) {
-        if (email == "") {
-            throw FieldMissingException(FIELD_EMAIL)
-        } else if (password == "") {
-            throw FieldMissingException(FIELD_PASSWORD)
-        }
+        checkEmailPwd(email, password)
         userGateway.loginUser(email, password)
     }
 
-    fun disconnectUser(){
+    fun disconnectUser() {
         userGateway.disconnectUser()
     }
 }

@@ -16,14 +16,21 @@ import org.mockito.BDDMockito.*
 import kotlin.test.assertFailsWith
 
 class UserManagerTest : KoinTest {
-    val userManager: UserManager by inject()
-    val userGateway: UserGateway by inject()
+    private val userManager: UserManager by inject()
+    private val userGateway: UserGateway by inject()
+
+    private val emailValid = "test@test.com"
+    private val passwordValid = "passwordValid"
+
+    private val emailEmpty = ""
+    private val passwordEmpty = ""
 
     @Before
     fun before() {
         startKoin {
             modules(appModule)
         }
+        declareMock<UserGateway>()
     }
 
     @After
@@ -31,23 +38,47 @@ class UserManagerTest : KoinTest {
         stopKoin()
     }
 
+    //create new user
     @Test
     fun createUser_success() {
-        val email = "test@test.com"
-        val password = "password"
-
-        declareMock<UserGateway> {
-            given(this.createUser(email, password)).willAnswer {}
-        }
-
-        userManager.createUser(email, password)
-        verify(userGateway, times(1)).createUser(email, password)
+        doNothing().`when`(userGateway).createUser(emailValid, passwordValid)
+        userManager.createUser(emailValid, passwordValid)
+        verify(userGateway, times(1)).createUser(emailValid, passwordValid)
     }
 
     @Test
-    fun createUser_fail() {
+    fun createUser_fail_email() {
         assertFailsWith(FieldMissingException::class) {
-            userManager.createUser("", "")
+            userManager.createUser(emailEmpty, passwordValid)
+        }
+    }
+
+    @Test
+    fun createUser_fail_password() {
+        assertFailsWith(FieldMissingException::class) {
+            userManager.createUser(emailValid, passwordEmpty)
+        }
+    }
+
+    //login user
+    @Test
+    fun loginUser_success() {
+        doNothing().`when`(userGateway).loginUser(emailValid, passwordValid)
+        userManager.loginUser(emailValid, passwordValid)
+        verify(userGateway, times(1)).loginUser(emailValid, passwordValid)
+    }
+
+    @Test
+    fun loginUser_fail_email() {
+        assertFailsWith(FieldMissingException::class) {
+            userManager.loginUser(emailEmpty, passwordValid)
+        }
+    }
+
+    @Test
+    fun loginUser_fail_password() {
+        assertFailsWith(FieldMissingException::class) {
+            userManager.loginUser(emailValid, passwordEmpty)
         }
     }
 }

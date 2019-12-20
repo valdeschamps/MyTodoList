@@ -37,7 +37,11 @@ class LoginPresenter : KoinComponent {
         }
     }
 
-    private fun checkRegisterForm(email: String, password: String, passwordConfirmation: String): Boolean {
+    private fun checkRegisterForm(
+        email: String,
+        password: String,
+        passwordConfirmation: String
+    ): Boolean {
         var valid = true
         if (email == "") {
             valid = false
@@ -101,9 +105,9 @@ class LoginPresenter : KoinComponent {
                     loginView?.displayError(ERROR_FIELDMISSING)
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
                     loginView?.displayError(ERROR_INVALIDCRED)
-                } catch (e: FirebaseNetworkException){
+                } catch (e: FirebaseNetworkException) {
                     loginView?.displayError(ERROR_NETWORK)
-                } catch (e: FirebaseAuthInvalidUserException){
+                } catch (e: FirebaseAuthInvalidUserException) {
                     loginView?.displayError(ERROR_INVALIDUSER)
                 }
             }

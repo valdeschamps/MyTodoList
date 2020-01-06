@@ -21,11 +21,13 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
         private var currentTaskPosition = 0
         private var taskDone = false
         private var todoTask = TodoTask()
+        private var isExpanded = false
 
         init {
             val checkSpinnerRate = 2
             var progressStatus = 0
             itemView.progressBarCheck.progress = 0
+            itemView.textViewDetails.visibility = View.GONE
 
             itemView.constraintLayoutCheck.setOnTouchListener { _, event ->
                 if (!taskDone) {
@@ -47,6 +49,10 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
                 }
                 //todo set to 0 if touch out of the view
                 true
+            }
+
+            itemView.linearLayoutTask.setOnClickListener {
+                setExpanded(!isExpanded)
             }
         }
 
@@ -79,7 +85,8 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
                 } else {
                     textViewDateTime.visibility = View.GONE
                 }
-                progressBarCheck.progressDrawable = resources.getDrawable(R.drawable.custom_progressbar, null)
+                progressBarCheck.progressDrawable =
+                    resources.getDrawable(R.drawable.custom_progressbar, null)
             }
         }
 
@@ -88,6 +95,14 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             itemView.apply {
                 checkBoxTodoTask.isChecked = done
                 progressBarCheck.progress = if (done) 100 else 0
+            }
+        }
+
+        private fun setExpanded(expanded: Boolean) {
+            if (todoTask.details.isNotEmpty()) {
+                itemView.textViewDetails.visibility = if (expanded) View.VISIBLE else View.GONE
+                isExpanded = expanded
+                notifyItemChanged(currentTaskPosition)
             }
         }
     }
@@ -104,6 +119,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.displayTask(todoTaskList[position], position)
+        //todo useless ?
         holder.setDoneState(todoTaskList[position].done)
     }
 

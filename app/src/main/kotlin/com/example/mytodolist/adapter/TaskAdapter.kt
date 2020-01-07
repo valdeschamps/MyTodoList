@@ -18,7 +18,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
     private val taskListFragment: TaskListFragmentInterface = taskListFragment
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var currentTaskPosition = 0
         private var taskDone = false
         private var todoTask = TodoTask()
         private var isExpanded = false
@@ -56,9 +55,8 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             }
         }
 
-        fun displayTask(newTodoTask: TodoTask, position: Int) {
+        fun displayTask(newTodoTask: TodoTask) {
             this.todoTask = newTodoTask
-            currentTaskPosition = position
             itemView.apply {
                 textViewTitle.text = todoTask.title
                 textViewDetails.text = todoTask.details
@@ -102,7 +100,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             if (todoTask.details.isNotEmpty()) {
                 itemView.textViewDetails.visibility = if (expanded) View.VISIBLE else View.GONE
                 isExpanded = expanded
-                notifyItemChanged(currentTaskPosition)
+                notifyItemChanged(this.adapterPosition)
             }
         }
     }
@@ -118,8 +116,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.displayTask(todoTaskList[position], position)
-        //todo useless ?
+        holder.displayTask(todoTaskList[position])
         holder.setDoneState(todoTaskList[position].done)
     }
 

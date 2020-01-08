@@ -1,5 +1,6 @@
 package com.example.mytodolist.adapter
 
+import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -96,11 +97,22 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
             }
         }
 
-        private fun setExpanded(expanded: Boolean) {
+        private fun setExpanded(expand: Boolean) {
             if (todoTask.details.isNotEmpty()) {
-                itemView.textViewDetails.visibility = if (expanded) View.VISIBLE else View.GONE
-                isExpanded = expanded
-                notifyItemChanged(this.adapterPosition)
+                val animator = ValueAnimator.ofFloat(0f, 90f).setDuration(500L)
+                animator.addUpdateListener {
+                    itemView.imageViewTriangle.rotation = it.animatedValue as Float
+                }
+
+                if(expand) {
+                    animator.start()
+                    itemView.textViewDetails.visibility = View.VISIBLE
+                }else{
+                    animator.reverse()
+                    itemView.textViewDetails.visibility = View.GONE
+                }
+
+                isExpanded = expand
             }
         }
     }

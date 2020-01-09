@@ -1,10 +1,13 @@
 package com.example.mytodolist.adapter
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
 import com.example.mytodolist.fragments.main.TaskListFragment
@@ -91,6 +94,16 @@ class TaskAdapter(taskListFragment: TaskListFragment) : RecyclerView.Adapter<Tas
 
         fun setDoneState(done: Boolean) {
             taskDone = done
+            if(done) {
+                ObjectAnimator.ofObject(
+                    itemView.linearLayoutTaskMain,
+                    "backgroundColor",
+                    ArgbEvaluator(),
+                    ContextCompat.getColor(itemView.context, R.color.colorBackground),
+                    ContextCompat.getColor(itemView.context, R.color.colorTaskBackgroundDone)
+                ).setDuration(1000).start()
+            }
+
             itemView.apply {
                 checkBoxTodoTask.isChecked = done
                 progressBarCheck.progress = if (done) 100 else 0

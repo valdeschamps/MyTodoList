@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.mytodolist.R
@@ -32,14 +31,12 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         //todo pull to refresh
 
         (recyclerViewTodoTask.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         recyclerViewTodoTask.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             setHasFixedSize(true)
         }
 

@@ -68,13 +68,8 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
             itemView.apply {
                 textViewTitle.text = todoTask.title
                 textViewDetails.text = todoTask.details
+                itemView.textViewDetails.visibility = if (isExpanded) View.VISIBLE else View.GONE
 
-                if (isExpanded) {
-                    itemView.textViewDetails.visibility = View.VISIBLE
-                    textViewDetails.text = todoTask.details
-                } else {
-                    itemView.textViewDetails.visibility = View.GONE
-                }
                 var dateString = String()
 
                 if (todoTask.dateTimestamp != -1L) {
@@ -102,6 +97,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                     resources.getDrawable(R.drawable.custom_progressbar, null)
 
                 if (newTodoTask.done) {
+                    checkBoxTodoTask.isChecked = true
                     progressBarCheck.progress = 100
                     linearLayoutTaskMain.setBackgroundColor(
                         ContextCompat.getColor(
@@ -110,6 +106,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                         )
                     )
                 } else {
+                    checkBoxTodoTask.isChecked = false
                     progressBarCheck.progress = 0
                     linearLayoutTaskMain.setBackgroundColor(
                         ContextCompat.getColor(
@@ -147,14 +144,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                 }
 
                 //isn't expanded yet
-                if (!isExpanded) {
-                    animator.start()
-                    itemView.textViewDetails.visibility = View.VISIBLE
-                } else {
-                    animator.reverse()
-                    itemView.textViewDetails.visibility = View.GONE
-                }
-
+                if (!isExpanded) {animator.start()} else {animator.reverse()}
                 isExpanded = !isExpanded
                 notifyItemChanged(adapterPosition)
             }

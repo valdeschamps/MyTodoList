@@ -4,8 +4,6 @@
     android:id="@+id/linearLayoutTaskMain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    android:animationCache="true"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,8 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:animateLayoutChanges="true"
-            android:animationCache="true"
             android:gravity="start"
             android:orientation="vertical"
             app:layout_constraintEnd_toStartOf="@+id/constraintLayoutCheck"

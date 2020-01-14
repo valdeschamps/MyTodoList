@@ -2,6 +2,7 @@ package com.example.mytodolist.adapter
 
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -22,15 +23,13 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
     private val taskListFragment: TaskListFragmentInterface = taskListFragment
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var taskDone = false
         private var todoTask = TodoTask()
+        private var taskDone = false
         var isExpanded = false
 
         init {
             val checkSpinnerRate = 2
             var progressStatus = 0
-            itemView.progressBarCheck.progress = 0
-            //itemView.textViewDetails.visibility = View.GONE
 
             itemView.constraintLayoutCheck.setOnTouchListener { _, event ->
                 if (!taskDone) {
@@ -40,9 +39,8 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                         itemView.progressBarCheck.progress = progressStatus
                     } else {
                         if (progressStatus == 100) {
-                            taskDone = true
                             //todo lock task view
-                            setDoneState(taskDone)
+                            setTaskDone()
                             taskListFragment.onTodoTaskChecked(todoTask, adapterPosition)
                         } else {
                             progressStatus += checkSpinnerRate
@@ -54,16 +52,29 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                 true
             }
 
-            /*itemView.linearLayoutTask.setOnClickListener {
-                setExpanded(!isExpanded)
-            }*/
+            itemView.linearLayoutTask.setOnClickListener {
+                setExpandedDetails()
+            }
         }
 
         fun displayTask(newTodoTask: TodoTask) {
-            this.todoTask = newTodoTask
+            if (todoTask.id != newTodoTask.id) {
+                isExpanded = false //if holder is reused with another task
+            }
+
+            todoTask = newTodoTask
+            taskDone = todoTask.done
+
             itemView.apply {
                 textViewTitle.text = todoTask.title
                 textViewDetails.text = todoTask.details
+
+                if (isExpanded) {
+                    itemView.textViewDetails.visibility = View.VISIBLE
+                    textViewDetails.text = todoTask.details
+                } else {
+                    itemView.textViewDetails.visibility = View.GONE
+                }
                 var dateString = String()
 
                 if (todoTask.dateTimestamp != -1L) {
@@ -89,51 +100,63 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                 }
                 progressBarCheck.progressDrawable =
                     resources.getDrawable(R.drawable.custom_progressbar, null)
+
+                if (newTodoTask.done) {
+                    progressBarCheck.progress = 100
+                    linearLayoutTaskMain.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorTaskBackgroundDone
+                        )
+                    )
+                } else {
+                    progressBarCheck.progress = 0
+                    linearLayoutTaskMain.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorBackground
+                        )
+                    )
+                }
             }
         }
 
-        fun setDoneState(done: Boolean) {
-            taskDone = done
-            if (done) {
-                ObjectAnimator.ofObject(
-                    itemView.linearLayoutTaskMain,
-                    "backgroundColor",
-                    ArgbEvaluator(),
-                    ContextCompat.getColor(itemView.context, R.color.colorBackground),
-                    ContextCompat.getColor(itemView.context, R.color.colorTaskBackgroundDone)
-                ).setDuration(1000).start()
-            }
+        private fun setTaskDone() {
+            taskDone = true
+
+            //todo animation after task updated
+            ObjectAnimator.ofObject(
+                itemView.linearLayoutTaskMain,
+                "backgroundColor",
+                ArgbEvaluator(),
+                ContextCompat.getColor(itemView.context, R.color.colorBackground),
+                ContextCompat.getColor(itemView.context, R.color.colorTaskBackgroundDone)
+            ).setDuration(1000).start()
 
             itemView.apply {
-                checkBoxTodoTask.isChecked = done
-                progressBarCheck.progress = if (done) 100 else 0
+                checkBoxTodoTask.isChecked = true
+                progressBarCheck.progress = 100
             }
         }
 
-        /*private fun setExpanded(expand: Boolean) {
+        private fun setExpandedDetails() {
             if (todoTask.details.isNotEmpty()) {
                 val animator = ValueAnimator.ofFloat(0f, 90f).setDuration(500L)
                 animator.addUpdateListener {
                     itemView.imageViewTriangle.rotation = it.animatedValue as Float
                 }
 
-                if(expand) {
+                //isn't expanded yet
+                if (!isExpanded) {
                     animator.start()
                     itemView.textViewDetails.visibility = View.VISIBLE
-                }else{
+                } else {
                     animator.reverse()
                     itemView.textViewDetails.visibility = View.GONE
                 }
 
-                isExpanded = expand
-            }
-        }*/
-
-        fun setExpandedDetails() {
-            if (isExpanded) {
-                itemView.textViewDetails.visibility = View.VISIBLE
-            } else {
-                itemView.textViewDetails.visibility = View.GONE
+                isExpanded = !isExpanded
+                notifyItemChanged(adapterPosition)
             }
         }
     }
@@ -151,14 +174,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val todoTask = todoTaskList[position]
         holder.displayTask(todoTask)
-        holder.setDoneState(todoTask.done)
-        holder.setExpandedDetails()
-        if (todoTask.details.isNotEmpty()) {
-            holder.itemView.linearLayoutTask.setOnClickListener {
-                holder.isExpanded = !holder.isExpanded
-                notifyItemChanged(position)
-            }
-        }
     }
 
     override fun getItemCount(): Int {

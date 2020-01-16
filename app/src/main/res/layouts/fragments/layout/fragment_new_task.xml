@@ -39,18 +39,18 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textLayoutDesc"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:id="@+id/textLayoutDesc"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:hint="@string/new_task_desc">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textInputDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textInputDesc"
-                        android:inputType="textAutoCorrect|textCapSentences"/>
+                        android:inputType="textUri|textShortMessage|textLongMessage|textAutoCorrect|textMultiLine|textCapSentences" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout

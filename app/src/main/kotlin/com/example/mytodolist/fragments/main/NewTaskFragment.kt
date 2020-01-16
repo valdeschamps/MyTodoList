@@ -113,10 +113,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             textInputTitle -> {
                 textInputDesc.requestFocus()
             }
-            textInputDesc -> {
-                imageViewDate.requestFocus()
-            }
-            //todo add next focus for each element
         }
         return true
     }

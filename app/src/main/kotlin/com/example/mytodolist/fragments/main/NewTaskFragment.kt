@@ -11,6 +11,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.model.TodoTask
@@ -125,6 +126,11 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
         menu?.findItem(R.id.new_task_action_clear)?.isVisible = true
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+            title = getString(R.string.title_bar_new_task)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {

@@ -33,15 +33,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override fun onBackPressed() {
-        if (fragmentManager.findFragmentById(R.id.frameLayoutMain) == newTaskFragment) {
-            setTopBarTaskList()
-        }
-
-        //todo press 2 times to leave
-        super.onBackPressed()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.new_task_menu, menu)
         return true
@@ -50,10 +41,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                if (fragmentManager.findFragmentById(R.id.frameLayoutMain) == newTaskFragment) {
-                    onBackPressed()
-                } else {
+                if (fragmentManager.findFragmentById(R.id.frameLayoutMain) == taskListFragment) {
                     drawerLayoutMain.openDrawer(GravityCompat.START)
+                } else {
+                    onBackPressed()
                 }
                 true
             }
@@ -86,7 +77,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             replace(R.id.frameLayoutMain, taskListFragment)
             commit()
         }
-        setTopBarTaskList()
     }
 
     private fun displayNewTaskFragment() {
@@ -94,23 +84,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             replace(R.id.frameLayoutMain, newTaskFragment)
             addToBackStack(null)
             commit()
-        }
-        setTopBarNewTask()
-    }
-
-    private fun setTopBarTaskList() {
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
-            title = getString(R.string.title_bar_task_list)
-        }
-    }
-
-    private fun setTopBarNewTask() {
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            title = getString(R.string.title_bar_new_task)
         }
     }
 

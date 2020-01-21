@@ -16,22 +16,22 @@ import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.fragment_task_list.*
 import org.koin.android.ext.android.inject
 
-class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, MainPresenter.TaskListView {
+class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
+    MainPresenter.TaskListView {
     private val mainPresenter: MainPresenter by inject()
     private var mainActivity: TaskListFragmentInterface? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
-
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        super.onPrepareOptionsMenu(menu)
-        menu?.findItem(R.id.new_task_action_clear)?.isVisible = false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter.setTaskListView(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
@@ -69,6 +69,11 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
         super.onDetach()
         mainActivity = null
         mainPresenter.setTaskListView(null)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        menu?.findItem(R.id.new_task_action_clear)?.isVisible = false
     }
 
     private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean) {

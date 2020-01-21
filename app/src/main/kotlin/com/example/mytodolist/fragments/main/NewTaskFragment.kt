@@ -22,23 +22,23 @@ import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView, TextView.OnEditorActionListener {
+class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView,
+    TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
     private var mainActivity: NewTaskFragmentInterface? = null
     private var dateLong: Long = -1L
     private var timeLong: Long = -1L
-
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        super.onPrepareOptionsMenu(menu)
-        menu?.findItem(R.id.new_task_action_clear)?.isVisible = true
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter.setNewTaskView(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_new_task, container, false)
     }
@@ -122,19 +122,40 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        menu?.findItem(R.id.new_task_action_clear)?.isVisible = true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        R.id.new_task_action_clear -> {
+            clearForm()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun displayDatePicker() {
         val calendar = Calendar.getInstance()
         if (dateLong != -1L) {
             calendar.time = Date(dateLong)
         }
 
-        DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-            val newCalendar = Calendar.getInstance()
-            newCalendar.set(year, month, dayOfMonth)
-            val dateString = SimpleDateFormat.getDateInstance().format(newCalendar.time)
-            textInputDate.setText(dateString)
-            dateLong = newCalendar.time.time
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+        DatePickerDialog(
+            requireContext(),
+            DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                val newCalendar = Calendar.getInstance()
+                newCalendar.set(year, month, dayOfMonth)
+                val dateString = SimpleDateFormat.getDateInstance().format(newCalendar.time)
+                textInputDate.setText(dateString)
+                dateLong = newCalendar.time.time
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     private fun displayTimePicker() {
@@ -143,17 +164,23 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
             calendar.time = Date(timeLong)
         }
 
-        TimePickerDialog(requireContext(), TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            val newCalendar = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, hourOfDay)
-                set(Calendar.MINUTE, minute)
-            }
-            val dateString =
-                SimpleDateFormat("hh:mm a", Locale.getDefault()).format(newCalendar.time)
-                    .format(newCalendar.time)
-            textInputTime.setText(dateString)
-            timeLong = newCalendar.time.time
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+        TimePickerDialog(
+            requireContext(),
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                val newCalendar = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, hourOfDay)
+                    set(Calendar.MINUTE, minute)
+                }
+                val dateString =
+                    SimpleDateFormat("hh:mm a", Locale.getDefault()).format(newCalendar.time)
+                        .format(newCalendar.time)
+                textInputTime.setText(dateString)
+                timeLong = newCalendar.time.time
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        ).show()
     }
 
     private fun isValid(newTodoTask: TodoTask): Boolean {
@@ -202,7 +229,8 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     private fun closeKeyboard() {
         val view = activity?.currentFocus
         if (view != null) {
-            val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputManager =
+                activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(
                 activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
             )

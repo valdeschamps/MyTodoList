@@ -4,6 +4,7 @@
 
     <item
         android:id="@+id/new_task_action_clear"
+        android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/new_task_clear"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>

@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
@@ -31,12 +28,18 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     private var dateLong: Long = -1L
     private var timeLong: Long = -1L
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        menu?.findItem(R.id.new_task_action_clear)?.isVisible = true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter.setNewTaskView(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_new_task, container, false)
     }
 
@@ -66,6 +69,8 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
         buttonCancel.setOnClickListener(this)
         buttonConfirm.setOnClickListener(this)
+
+        activity?.invalidateOptionsMenu()
     }
 
     override fun onClick(view: View?) {

@@ -3,6 +3,7 @@ package com.example.mytodolist.fragments.main
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -20,12 +21,18 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
     private var mainActivity: TaskListFragmentInterface? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        menu?.findItem(R.id.new_task_action_clear)?.isVisible = false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter.setTaskListView(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
 
@@ -46,6 +53,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface, Main
 
         //todo only get all tasks first time
         mainPresenter.displayUserTasks()
+        activity?.invalidateOptionsMenu()
     }
 
     override fun onAttach(context: Context) {

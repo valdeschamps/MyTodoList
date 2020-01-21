@@ -29,4 +29,5 @@
     <string name="ERROR_INVALIDUSER">Utilisateur invalid</string>
     <string name="ERROR_NETWORK">Erreur de connexion</string>
     <string name="ERROR_INVALIDCRED">Identifiants incorrects</string>
+    <string name="new_task_clear">Effacer</string>
 </resources>

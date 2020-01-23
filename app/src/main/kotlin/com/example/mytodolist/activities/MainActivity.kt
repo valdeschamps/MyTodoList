@@ -39,16 +39,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                if (fragmentManager.findFragmentById(R.id.frameLayoutMain) == taskListFragment) {
-                    drawerLayoutMain.openDrawer(GravityCompat.START)
-                } else {
-                    onBackPressed()
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        return if ((fragmentManager.findFragmentById(R.id.frameLayoutMain) == taskListFragment) && (item.itemId == android.R.id.home)) {
+            drawerLayoutMain.openDrawer(GravityCompat.START)
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
@@ -30,7 +31,16 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
         loginPresenter.setRegisterView(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+            title = ""
+        }
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
 
@@ -68,7 +78,6 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
             val email = textInputRegisterEmail.text.toString()
             val password = textInputRegisterPwd.text.toString()
             val passwordConfirm = textInputRegisterPwdCheck.text.toString()
-
             loginPresenter.createUser(email, password, passwordConfirm)
         }
     }
@@ -111,7 +120,8 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
     private fun closeKeyboard() {
         val view = activity?.currentFocus
         if (view != null) {
-            val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputManager =
+                activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(
                 activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
             )
@@ -127,7 +137,8 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
         when (field) {
             FIELD_EMAIL -> textLayoutRegisterEmail.error = getString(R.string.empty_field)
             FIELD_PASSWORD -> textLayoutRegisterPwd.error = getString(R.string.empty_field)
-            FIELD_PASSWORD_CONFIRM -> textLayoutRegisterPwdCheck.error = getString(R.string.empty_field)
+            FIELD_PASSWORD_CONFIRM -> textLayoutRegisterPwdCheck.error =
+                getString(R.string.empty_field)
         }
     }
 
@@ -136,7 +147,8 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
     }
 
     override fun confirmRegister() {
-        Toast.makeText(context, getString(R.string.toast_account_created), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, getString(R.string.toast_account_created), Toast.LENGTH_SHORT)
+            .show()
         loginActivity?.connectUser()
     }
 

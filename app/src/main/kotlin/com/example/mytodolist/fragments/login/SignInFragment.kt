@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
@@ -31,7 +32,15 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         loginPresenter.setLoginView(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            title = ""
+        }
         return inflater.inflate(R.layout.fragment_sign_in, container, false)
     }
 
@@ -98,7 +107,8 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
 
     private fun closeKeyboard() {
         if (activity?.currentFocus != null) {
-            val inputManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputManager =
+                activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(
                 activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
             )
@@ -107,7 +117,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
 
     //from LoginPresenter
     override fun displayError(code: String) {
-        when(code){
+        when (code) {
             ERROR_FIELDMISSING -> textViewSignInError.text = getString(R.string.ERROR_FIELDMISSING)
             ERROR_INVALIDCRED -> textViewSignInError.text = getString(R.string.ERROR_INVALIDCRED)
             ERROR_NETWORK -> textViewSignInError.text = getString(R.string.ERROR_NETWORK)

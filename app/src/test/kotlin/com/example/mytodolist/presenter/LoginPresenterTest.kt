@@ -19,7 +19,8 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.koin.test.mock.declareMock
 import org.mockito.BDDMockito.given
-import org.mockito.Mockito.*
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 class LoginPresenterTest : KoinTest {
     private val userManager: UserManager by inject()
@@ -48,28 +49,6 @@ class LoginPresenterTest : KoinTest {
 
         Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
         mainThreadSurrogate.close()
-    }
-
-    @Test
-    fun checkLoggedUser_success() {
-        val loadingView = mock(LoginPresenter.LoadingView::class.java)
-        loginPresenter.setLoadingView(loadingView)
-
-        doReturn(true).`when`(userManager).userAlreadyLogged()
-        loginPresenter.checkLoggedUser()
-
-        verify(loadingView, times(1)).connectUser()
-    }
-
-    @Test
-    fun checkLoggedUser_fail() {
-        val loadingView = mock(LoginPresenter.LoadingView::class.java)
-        loginPresenter.setLoadingView(loadingView)
-
-        doReturn(false).`when`(userManager).userAlreadyLogged()
-        loginPresenter.checkLoggedUser()
-
-        verify(loadingView, times(1)).displaySignFragment()
     }
 
     @Test

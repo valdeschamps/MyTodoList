@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
 import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_EMAIL
@@ -22,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.android.ext.android.inject
 
 class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEditorActionListener {
-    private var loginActivity: LoginActivityInterface? = null
     private val loginPresenter: LoginPresenter by inject()
     //todo display error for email/pwd coming from firebase
 
@@ -36,11 +36,7 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            title = ""
-        }
+        (activity as AppCompatActivity).supportActionBar?.title = ""
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
 
@@ -82,18 +78,8 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is LoginActivityInterface) {
-            loginActivity = context
-        } else {
-            throw RuntimeException("$context must implement LoginActivityInterface")
-        }
-    }
-
     override fun onDetach() {
         super.onDetach()
-        loginActivity = null
         loginPresenter.setRegisterView(null)
     }
 
@@ -149,10 +135,6 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
     override fun confirmRegister() {
         Toast.makeText(context, getString(R.string.toast_account_created), Toast.LENGTH_SHORT)
             .show()
-        loginActivity?.connectUser()
-    }
-
-    interface LoginActivityInterface {
-        fun connectUser()
+        findNavController().navigateUp()
     }
 }

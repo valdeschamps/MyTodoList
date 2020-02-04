@@ -15,8 +15,7 @@ import org.koin.core.inject
 
 class LoginPresenter : KoinComponent {
     private val userManager: UserManager by inject()
-    private var loadingView: LoadingView? = null
-    private var loginView: SignInView? = null
+    private var loginView: SignInView? = null //todo rename
     private var registerView: RegisterView? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
@@ -31,9 +30,7 @@ class LoginPresenter : KoinComponent {
 
     fun checkLoggedUser() {
         if (userManager.userAlreadyLogged()) {
-            loadingView?.connectUser()
-        } else {
-            loadingView?.displaySignFragment()
+            loginView?.connectUser()
         }
     }
 
@@ -114,21 +111,12 @@ class LoginPresenter : KoinComponent {
         }
     }
 
-    fun setLoadingView(loadingView: LoadingView?) {
-        this.loadingView = loadingView
-    }
-
     fun setLoginView(loginView: SignInView?) {
         this.loginView = loginView
     }
 
     fun setRegisterView(registerView: RegisterView?) {
         this.registerView = registerView
-    }
-
-    interface LoadingView {
-        fun connectUser()
-        fun displaySignFragment()
     }
 
     interface SignInView {

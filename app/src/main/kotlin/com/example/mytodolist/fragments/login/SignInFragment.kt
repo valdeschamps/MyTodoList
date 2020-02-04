@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.mytodolist.R
 import com.example.mytodolist.presenter.LoginPresenter
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_FIELDMISSING
@@ -24,12 +25,12 @@ import kotlinx.android.synthetic.main.fragment_sign_in.*
 import org.koin.android.ext.android.inject
 
 class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorActionListener {
-    private var loginActivity: LoginActivityInterface? = null
     private val loginPresenter: LoginPresenter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loginPresenter.setLoginView(this)
+        loginPresenter.checkLoggedUser()
     }
 
     override fun onCreateView(
@@ -37,10 +38,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(false)
-            title = ""
-        }
+        (activity as AppCompatActivity).supportActionBar?.title = ""
         return inflater.inflate(R.layout.fragment_sign_in, container, false)
     }
 
@@ -73,22 +71,13 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         }
 
         buttonRegister.setOnClickListener {
-            loginActivity?.goToRegisterFragment()
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is LoginActivityInterface) {
-            loginActivity = context
-        } else {
-            throw RuntimeException("$context must implement LoginActivityInterface")
+            val action = SignInFragmentDirections.actionSignInFragmentToRegisterFragment()
+            findNavController().navigate(action)
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        loginActivity = null
         loginPresenter.setLoginView(null)
     }
 
@@ -126,7 +115,8 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
     }
 
     override fun connectUser() {
-        loginActivity?.connectUser()
+        val action = SignInFragmentDirections.actionSignInFragmentToMainActivity()
+        findNavController().navigate(action)
     }
 
     override fun displayMissingField(field: String) {
@@ -134,10 +124,5 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
             FIELD_EMAIL -> textLayoutEmail.error = getString(R.string.empty_field)
             FIELD_PASSWORD -> textLayoutPassword.error = getString(R.string.empty_field)
         }
-    }
-
-    interface LoginActivityInterface {
-        fun goToRegisterFragment()
-        fun connectUser()
     }
 }

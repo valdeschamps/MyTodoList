@@ -41,7 +41,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-    buildToolsVersion = '29.0.2'
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildToolsVersion = '29.0.3'
 }
 
 dependencies {
@@ -54,6 +57,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-firestore:21.3.1'
+
+    //jetpack navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:2.2.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.2.0"
 
     implementation 'org.koin:koin-android:2.0.1'
     testImplementation 'org.koin:koin-test:2.0.1'
@@ -73,3 +80,4 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: "androidx.navigation.safeargs.kotlin"

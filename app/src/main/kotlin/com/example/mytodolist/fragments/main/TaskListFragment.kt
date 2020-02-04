@@ -1,26 +1,27 @@
 package com.example.mytodolist.fragments.main
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.mytodolist.R
 import com.example.mytodolist.adapter.TaskAdapter
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.MainPresenter
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_task_list.*
 import org.koin.android.ext.android.inject
 
 class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     MainPresenter.TaskListView {
     private val mainPresenter: MainPresenter by inject()
-    private var mainActivity: TaskListFragmentInterface? = null
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,38 +50,23 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         }
 
         floatingActionButtonAdd.setOnClickListener {
-            mainActivity?.displayAddTaskFragment()
+            val action = TaskListFragmentDirections.actionTaskListFragmentToNewTaskFragment()
+            findNavController().navigate(action)
         }
 
         //todo only get all tasks first time
         mainPresenter.displayUserTasks()
-        activity?.invalidateOptionsMenu()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is TaskListFragmentInterface) {
-            mainActivity = context
-        } else {
-            throw RuntimeException("$context must implement TaskListFragmentInterface")
-        }
+        activity?.drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
     override fun onDetach() {
         super.onDetach()
-        mainActivity = null
         mainPresenter.setTaskListView(null)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        menu?.findItem(R.id.new_task_action_clear)?.isVisible = false
-
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
-            title = getString(R.string.title_bar_task_list)
-        }
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_bar_task_list)
     }
 
     private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean) {
@@ -133,9 +119,5 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     override fun moveTask(newTodoTaskList: ArrayList<TodoTask>, oldPos: Int, newPos: Int) {
         updateAdapterData(newTodoTaskList)
         recyclerAdapter.notifyItemMoved(oldPos, newPos)
-    }
-
-    interface TaskListFragmentInterface {
-        fun displayAddTaskFragment()
     }
 }

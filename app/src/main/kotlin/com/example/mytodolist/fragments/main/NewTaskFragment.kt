@@ -12,12 +12,15 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.mytodolist.R
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.MainPresenter
 import com.example.mytodolist.presenter.MainPresenter.Companion.ERROR
 import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_TITLE
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
@@ -26,7 +29,6 @@ import java.util.*
 class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskView,
     TextView.OnEditorActionListener {
     private val mainPresenter: MainPresenter by inject()
-    private var mainActivity: NewTaskFragmentInterface? = null
     private var dateLong: Long = -1L
     private var timeLong: Long = -1L
 
@@ -71,7 +73,10 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         buttonCancel.setOnClickListener(this)
         buttonConfirm.setOnClickListener(this)
 
-        activity?.invalidateOptionsMenu()
+        activity?.drawerLayoutMain?.apply {
+            closeDrawers()
+            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
     }
 
     override fun onClick(view: View?) {
@@ -90,7 +95,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
                 clearTime()
             }
             buttonCancel -> {
-                mainActivity?.newTaskFragmentDismiss()
+                findNavController().navigateUp()
             }
             buttonConfirm -> {
                 addNewTask()
@@ -98,19 +103,9 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is NewTaskFragmentInterface) {
-            mainActivity = context
-        } else {
-            throw RuntimeException("$context must implement NewTaskFragmentInterface")
-        }
-    }
-
     override fun onDetach() {
         super.onDetach()
         closeKeyboard()
-        mainActivity = null
         mainPresenter.setNewTaskView(null)
     }
 
@@ -123,17 +118,19 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         return true
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        super.onPrepareOptionsMenu(menu)
-        menu?.findItem(R.id.new_task_action_clear)?.isVisible = true
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            title = getString(R.string.title_bar_new_task)
-        }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        activity?.menuInflater?.inflate(R.menu.new_task_menu, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        menu.findItem(R.id.new_task_action_clear)?.isVisible = true
+        (activity as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.title_bar_new_task)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.new_task_action_clear -> {
             clearForm()
             true
@@ -247,7 +244,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     override fun closeNewTaskFragment() {
         Toast.makeText(context, getString(R.string.toast_new_task), Toast.LENGTH_SHORT).show()
         clearForm()
-        mainActivity?.newTaskFragmentDismiss()
+        findNavController().navigateUp()
     }
 
     override fun displayError(message: String) {
@@ -268,9 +265,5 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
                 textLayoutTitle.error = resources.getString(R.string.empty_field)
             }
         }
-    }
-
-    interface NewTaskFragmentInterface {
-        fun newTaskFragmentDismiss()
     }
 }

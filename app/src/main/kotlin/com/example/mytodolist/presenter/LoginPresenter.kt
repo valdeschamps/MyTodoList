@@ -15,7 +15,7 @@ import org.koin.core.inject
 
 class LoginPresenter : KoinComponent {
     private val userManager: UserManager by inject()
-    private var loginView: SignInView? = null //todo rename
+    private var signInView: SignInView? = null
     private var registerView: RegisterView? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
@@ -30,7 +30,7 @@ class LoginPresenter : KoinComponent {
 
     fun checkLoggedUser() {
         if (userManager.userAlreadyLogged()) {
-            loginView?.connectUser()
+            signInView?.connectUser()
         }
     }
 
@@ -81,11 +81,11 @@ class LoginPresenter : KoinComponent {
         var valid = true
         if (email == "") {
             valid = false
-            loginView?.displayMissingField(FIELD_EMAIL)
+            signInView?.displayMissingField(FIELD_EMAIL)
         }
         if (password == "") {
             valid = false
-            loginView?.displayMissingField(FIELD_PASSWORD)
+            signInView?.displayMissingField(FIELD_PASSWORD)
         }
         return valid
     }
@@ -97,22 +97,22 @@ class LoginPresenter : KoinComponent {
                     withContext(Dispatchers.Default) {
                         userManager.loginUser(email, password)
                     }
-                    loginView?.connectUser()
+                    signInView?.connectUser()
                 } catch (e: FieldMissingException) {
-                    loginView?.displayError(ERROR_FIELDMISSING)
+                    signInView?.displayError(ERROR_FIELDMISSING)
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
-                    loginView?.displayError(ERROR_INVALIDCRED)
+                    signInView?.displayError(ERROR_INVALIDCRED)
                 } catch (e: FirebaseNetworkException) {
-                    loginView?.displayError(ERROR_NETWORK)
+                    signInView?.displayError(ERROR_NETWORK)
                 } catch (e: FirebaseAuthInvalidUserException) {
-                    loginView?.displayError(ERROR_INVALIDUSER)
+                    signInView?.displayError(ERROR_INVALIDUSER)
                 }
             }
         }
     }
 
     fun setLoginView(loginView: SignInView?) {
-        this.loginView = loginView
+        this.signInView = loginView
     }
 
     fun setRegisterView(registerView: RegisterView?) {

@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mytodolist.R
@@ -20,7 +19,6 @@ import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.MainPresenter
 import com.example.mytodolist.presenter.MainPresenter.Companion.ERROR
 import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_TITLE
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
@@ -72,12 +70,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
         buttonCancel.setOnClickListener(this)
         buttonConfirm.setOnClickListener(this)
-
-        //todo on list fragment (on detach ?)
-        activity?.drawerLayoutMain?.apply {
-            closeDrawers()
-            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        }
     }
 
     override fun onClick(view: View?) {

@@ -22,13 +22,9 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
     var actionMode: ActionMode? = null
 
-    //todo custom class name instead of object
     private val actionModeCallback = object : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            activity?.drawerLayoutMain?.apply {
-                closeDrawers()
-                setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            }
+            closeAndLockDrawer()
             mode.menuInflater.inflate(R.menu.selected_task_menu, menu)
             return true
         }
@@ -99,6 +95,11 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         activity?.drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        closeAndLockDrawer()
+    }
+
     override fun onDetach() {
         super.onDetach()
         mainPresenter.setTaskListView(null)
@@ -108,6 +109,13 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         super.onPrepareOptionsMenu(menu)
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.title_bar_task_list)
+    }
+
+    private fun closeAndLockDrawer(){
+        activity?.drawerLayoutMain?.apply {
+            closeDrawers()
+            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
     }
 
     private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean) {

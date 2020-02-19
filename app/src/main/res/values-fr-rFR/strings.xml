@@ -30,4 +30,7 @@
     <string name="ERROR_NETWORK">Erreur de connexion</string>
     <string name="ERROR_INVALIDCRED">Identifiants incorrects</string>
     <string name="new_task_clear">Effacer</string>
+    <string name="selected_task_alarm">Changer l\'alarme</string>
+    <string name="selected_task_edit">Editer</string>
+    <string name="selected_task_delete">Supprimer</string>
 </resources>

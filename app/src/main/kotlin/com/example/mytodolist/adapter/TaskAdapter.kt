@@ -52,6 +52,12 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
             itemView.linearLayoutTask.setOnClickListener {
                 setExpandedDetails()
             }
+
+            itemView.linearLayoutTask.setOnLongClickListener {
+                taskListFragment.itemLongClicked()
+                //todo highlight task
+                true
+            }
         }
 
         fun displayTask(newTodoTask: TodoTask) {
@@ -147,5 +153,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
 
     interface TaskListFragmentInterface {
         fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int)
+        fun itemLongClicked()
     }
 }

@@ -1,10 +1,7 @@
 package com.example.mytodolist.fragments.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -23,6 +20,49 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     MainPresenter.TaskListView {
     private val mainPresenter: MainPresenter by inject()
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
+    var actionMode: ActionMode? = null
+
+    //todo custom class name instead of object
+    private val actionModeCallback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            activity?.drawerLayoutMain?.apply {
+                closeDrawers()
+                setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
+            mode.menuInflater.inflate(R.menu.selected_task_menu, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            //todo update alarm icon
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.selected_task_action_alarm -> {
+                    mode.finish()
+                    true
+                }
+
+                R.id.selected_task_action_edit -> {
+                    mode.finish()
+                    true
+                }
+
+                R.id.selected_task_action_delete -> {
+                    mode.finish()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            actionMode = null
+            activity?.drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +106,8 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_bar_task_list)
+        (activity as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.title_bar_task_list)
     }
 
     private fun displayTodoTaskList(newTodoTaskList: ArrayList<TodoTask>, insertNewTask: Boolean) {
@@ -101,6 +142,12 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     //from TaskAdapter
     override fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int) {
         mainPresenter.updateTaskDone(todoTask.id, currentPos)
+    }
+
+    override fun itemLongClicked() {
+        if (actionMode == null) {
+            actionMode = activity?.startActionMode(actionModeCallback)
+        }
     }
 
     //from MainPresenter

@@ -30,4 +30,7 @@
     <string name="ERROR_NETWORK">Network error</string>
     <string name="ERROR_INVALIDCRED">Invalids credentials</string>
     <string name="new_task_clear">Clear</string>
+    <string name="selected_task_alarm">Toggle alarm</string>
+    <string name="selected_task_edit">Edit</string>
+    <string name="selected_task_delete">Delete</string>
 </resources>

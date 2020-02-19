@@ -73,6 +73,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         buttonCancel.setOnClickListener(this)
         buttonConfirm.setOnClickListener(this)
 
+        //todo on list fragment (on detach ?)
         activity?.drawerLayoutMain?.apply {
             closeDrawers()
             setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)

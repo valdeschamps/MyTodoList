@@ -106,6 +106,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     override fun onDestroyView() {
         super.onDestroyView()
         closeAndLockDrawer()
+        actionMode?.finish()
     }
 
     override fun onDetach() {

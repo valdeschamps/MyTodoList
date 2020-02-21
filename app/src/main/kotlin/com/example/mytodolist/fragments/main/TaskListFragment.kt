@@ -31,6 +31,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
             //todo update alarm icon
+            selectTask(true)
             return false
         }
 
@@ -57,6 +58,13 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         override fun onDestroyActionMode(mode: ActionMode) {
             actionMode = null
             activity?.drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            selectTask(false)
+        }
+
+        fun selectTask(selected: Boolean){
+            val taskPos = recyclerAdapter.selectedTaskPos
+            if(!selected) recyclerAdapter.selectedTaskPos = -1
+            recyclerAdapter.notifyItemChanged(taskPos)
         }
     }
 
@@ -152,8 +160,9 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         mainPresenter.updateTaskDone(todoTask.id, currentPos)
     }
 
-    override fun itemLongClicked() {
+    override fun itemLongClicked(position: Int) {
         if (actionMode == null) {
+            recyclerAdapter.selectedTaskPos = position
             actionMode = activity?.startActionMode(actionModeCallback)
         }
     }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
 import com.example.mytodolist.fragments.main.TaskListFragment
@@ -18,6 +19,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
     RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private var todoTaskList = ArrayList<TodoTask>()
     private val taskListFragment: TaskListFragmentInterface = taskListFragment
+    var selectedTaskPos = -1
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var todoTask = TodoTask()
@@ -54,13 +56,12 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
             }
 
             itemView.linearLayoutTask.setOnLongClickListener {
-                taskListFragment.itemLongClicked()
-                //todo highlight task
+                taskListFragment.itemLongClicked(adapterPosition)
                 true
             }
         }
 
-        fun displayTask(newTodoTask: TodoTask) {
+        fun displayTask(newTodoTask: TodoTask, position: Int) {
             if (todoTask.id != newTodoTask.id) {
                 isExpanded = false //if holder is reused with another task
             }
@@ -106,6 +107,13 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                     checkBoxTodoTask.isChecked = false
                     progressBarCheck.progress = 0
                 }
+
+                val color = ContextCompat.getColor(
+                    itemView.context,
+                    if (position == selectedTaskPos) R.color.colorBackgroundTaskSelected
+                    else R.color.colorBackgroundTask
+                )
+                CardViewTaskMain.setCardBackgroundColor(color)
             }
         }
 
@@ -125,7 +133,11 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                 }
 
                 //isn't expanded yet
-                if (!isExpanded) {animator.start()} else {animator.reverse()}
+                if (!isExpanded) {
+                    animator.start()
+                } else {
+                    animator.reverse()
+                }
                 isExpanded = !isExpanded
                 notifyItemChanged(adapterPosition)
             }
@@ -144,7 +156,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val todoTask = todoTaskList[position]
-        holder.displayTask(todoTask)
+        holder.displayTask(todoTask, position)
     }
 
     override fun getItemCount(): Int {
@@ -153,6 +165,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
 
     interface TaskListFragmentInterface {
         fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int)
-        fun itemLongClicked()
+        fun itemLongClicked(position: Int)
     }
 }

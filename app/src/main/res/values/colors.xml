@@ -8,6 +8,7 @@
     <color name="colorTaskBackgroundDone">#FCE4EC</color>
     <color name="colorBackground">#FAFAFA</color>
     <color name="colorBackgroundTask">#E6E6E6</color>
+    <color name="colorBackgroundTaskSelected">#969696</color>
 
     <color name="primary">#cfd8dc</color>
     <color name="primaryDark">#9ea7aa</color>

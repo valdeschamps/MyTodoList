@@ -4,6 +4,7 @@ import com.example.mytodolist.firebase.FirebaseInfos
 import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.model.User
 import com.example.mytodolist.usecase.Repository
+import com.example.mytodolist.usecase.TodoTaskManager.Companion.TODOTASK_DELETE
 import com.example.mytodolist.usecase.TodoTaskManager.Companion.TODOTASK_DONE
 import com.example.mytodolist.usecase.TodoTaskManager.Companion.TODOTASK_NEXTID
 import com.google.android.gms.tasks.Tasks
@@ -117,6 +118,9 @@ class FirestoreRepo : Repository, KoinComponent {
                     }
                     TODOTASK_DONE -> {
                         batch.update(docRef, it.second, it.first.done)
+                    }
+                    TODOTASK_DELETE -> {
+                        batch.delete(docRef.parent.document(it.first.id))
                     }
                 }
             }

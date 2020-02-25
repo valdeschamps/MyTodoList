@@ -86,7 +86,20 @@ class MainPresenter : KoinComponent {
         }
     }
 
-    fun disconnectUser(){
+    fun deleteTask(taskId: String, oldTaskPos: Int) {
+        scopeMain.launch {
+            try {
+                withContext(Dispatchers.Default) {
+                    todoTaskManager.deleteTask(taskId)
+                }
+                taskListView?.deleteTask(getUserTasks(), oldTaskPos)
+            } catch (e: FirebaseFirestoreException) {
+                taskListView?.displayError(ERROR)
+            }
+        }
+    }
+
+    fun disconnectUser() {
         val userManager: UserManager by inject()
         userManager.disconnectUser()
     }
@@ -96,6 +109,7 @@ class MainPresenter : KoinComponent {
         fun displayHint()
         fun displayError(error: String)
         fun moveTask(newTodoTaskList: ArrayList<TodoTask>, oldPos: Int, newPos: Int)
+        fun deleteTask(newTodoTaskList: ArrayList<TodoTask>, oldTaskPos: Int)
     }
 
     interface NewTaskView {

@@ -1,9 +1,12 @@
 package com.example.mytodolist.fragments.main
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,17 +41,20 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             return when (item.itemId) {
                 R.id.selected_task_action_alarm -> {
+                    //todo
                     mode.finish()
                     true
                 }
 
                 R.id.selected_task_action_edit -> {
+                    //todo
                     mode.finish()
                     true
                 }
 
                 R.id.selected_task_action_delete -> {
-                    mode.finish()
+                    val deleteDialogFragment = DeleteDialogFragment(actionMode, mainPresenter, recyclerAdapter.selectedTaskId, recyclerAdapter.selectedTaskPos)
+                    deleteDialogFragment.show(requireActivity().supportFragmentManager, null)
                     true
                 }
                 else -> false
@@ -85,6 +91,8 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //todo pull to refresh
+
+        //todo tasks not displayed after sign out and sign in again
 
         (recyclerViewTodoTask.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         recyclerViewTodoTask.apply {
@@ -161,9 +169,10 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         mainPresenter.updateTaskDone(todoTask.id, currentPos)
     }
 
-    override fun itemLongClicked(position: Int) {
+    override fun itemLongClicked(id: String, position: Int) {
         if (actionMode == null) {
             recyclerAdapter.selectedTaskPos = position
+            recyclerAdapter.selectedTaskId = id
             actionMode = activity?.startActionMode(actionModeCallback)
         }
     }
@@ -185,4 +194,33 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         updateAdapterData(newTodoTaskList)
         recyclerAdapter.notifyItemMoved(oldPos, newPos)
     }
+
+    override fun deleteTask(newTodoTaskList: ArrayList<TodoTask>, oldTaskPos: Int) {
+        updateAdapterData(newTodoTaskList)
+        recyclerAdapter.notifyItemRemoved(oldTaskPos)
+    }
+
+    class DeleteDialogFragment(
+        private var actionMode: ActionMode?,
+        private val mainPresenter: MainPresenter,
+        private val selectedTaskId: String,
+        private val selectedTaskPos: Int
+    ) : DialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            return activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.setMessage(R.string.dialog_delete_message)
+                    .setPositiveButton(R.string.yes
+                    ) { _, _ ->
+                        mainPresenter.deleteTask(selectedTaskId, selectedTaskPos )
+                        actionMode?.finish()
+                    }
+                    .setNegativeButton(R.string.no
+                    ) { _, _ ->
+                    }
+                builder.create()
+            } ?: throw IllegalStateException("Activity cannot be null")
+        }
+    }
+
 }

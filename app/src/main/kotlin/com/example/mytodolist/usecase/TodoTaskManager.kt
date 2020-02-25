@@ -13,6 +13,7 @@ class TodoTaskManager : KoinComponent {
         const val TODOTASK_NEXTID_LAST = "last"
         const val TODOTASK_DONE = "done"
         const val TODOTASK_NEXTID = "nextID"
+        const val TODOTASK_DELETE = "DELETE"
     }
 
     fun addNewTask(newTodoTask: TodoTask) {
@@ -61,6 +62,21 @@ class TodoTaskManager : KoinComponent {
             changeList.add(Pair(currentTask, TODOTASK_DONE))
         }
 
+        repository.updateTasks(changeList)
+    }
+
+    fun deleteTask(id: String) {
+        val changeList = ArrayList<Pair<TodoTask, String>>()
+        val userTasks = repository.getLocalTasks()
+
+        val currentTask = userTasks.single { it.id == id }
+        val previousTask = userTasks.singleOrNull { it.nextID == id }
+        if (previousTask != null) {
+            previousTask.nextID = currentTask.nextID
+            changeList.add(Pair(previousTask, TODOTASK_NEXTID))
+        }
+
+        changeList.add(Pair(currentTask, TODOTASK_DELETE))
         repository.updateTasks(changeList)
     }
 

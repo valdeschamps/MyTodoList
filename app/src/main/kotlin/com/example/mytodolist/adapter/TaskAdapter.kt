@@ -20,6 +20,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
     private var todoTaskList = ArrayList<TodoTask>()
     private val taskListFragment: TaskListFragmentInterface = taskListFragment
     var selectedTaskPos = -1
+    var selectedTaskId = ""
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var todoTask = TodoTask()
@@ -56,7 +57,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
             }
 
             itemView.linearLayoutTask.setOnLongClickListener {
-                taskListFragment.itemLongClicked(adapterPosition)
+                taskListFragment.itemLongClicked(todoTask.id, adapterPosition)
                 true
             }
         }
@@ -165,6 +166,6 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
 
     interface TaskListFragmentInterface {
         fun onTodoTaskChecked(todoTask: TodoTask, currentPos: Int)
-        fun itemLongClicked(position: Int)
+        fun itemLongClicked(id: String, position: Int)
     }
 }

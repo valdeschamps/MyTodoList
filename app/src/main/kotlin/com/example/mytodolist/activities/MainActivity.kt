@@ -29,10 +29,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationViewMain.setNavigationItemSelectedListener(this)
     }
 
-    /*override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(drawerLayoutMain)
-    }*/
-
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.itemSignOut -> {

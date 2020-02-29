@@ -98,7 +98,6 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         super.onViewCreated(view, savedInstanceState)
         //todo pull to refresh
 
-        //todo tasks not displayed after sign out and sign in again
         (recyclerViewTodoTask.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         recyclerViewTodoTask.apply {
             layoutManager = LinearLayoutManager(context)
@@ -111,7 +110,6 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
             findNavController().navigate(action)
         }
 
-        //todo only get all tasks first time
         if(loginPresenter.isUserLogged()) {
             mainPresenter.displayUserTasks()
         }

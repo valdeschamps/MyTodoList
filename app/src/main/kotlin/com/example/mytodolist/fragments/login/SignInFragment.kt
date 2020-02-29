@@ -71,10 +71,12 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         buttonSignIn.setOnClickListener {
             val email = textInputEmail.text.toString()
             val password = textInputPassword.text.toString()
+            closeKeyboard()
             loginPresenter.loginUser(email, password)
         }
 
         buttonRegister.setOnClickListener {
+            closeKeyboard()
             val action = SignInFragmentDirections.actionSignInFragmentToRegisterFragment()
             findNavController().navigate(action)
         }

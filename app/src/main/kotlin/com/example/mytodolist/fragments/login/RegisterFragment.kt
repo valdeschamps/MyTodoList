@@ -74,6 +74,7 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
             val email = textInputRegisterEmail.text.toString()
             val password = textInputRegisterPwd.text.toString()
             val passwordConfirm = textInputRegisterPwdCheck.text.toString()
+            closeKeyboard()
             loginPresenter.createUser(email, password, passwordConfirm)
         }
     }

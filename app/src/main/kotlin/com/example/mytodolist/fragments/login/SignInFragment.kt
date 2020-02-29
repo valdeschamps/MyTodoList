@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mytodolist.R
@@ -21,6 +23,7 @@ import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDUS
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_NETWORK
 import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_EMAIL
 import com.example.mytodolist.utils.FieldMissingException.Companion.FIELD_PASSWORD
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import org.koin.android.ext.android.inject
 
@@ -38,6 +41,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.title = ""
         return inflater.inflate(R.layout.fragment_sign_in, container, false)
     }
@@ -73,6 +77,20 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         buttonRegister.setOnClickListener {
             val action = SignInFragmentDirections.actionSignInFragmentToRegisterFragment()
             findNavController().navigate(action)
+        }
+
+        val toggle = ActionBarDrawerToggle(
+            activity,
+            drawerLayoutMain,
+            toolbarmain,
+            R.string.yes,
+            R.string.no
+        )
+        toggle.isDrawerIndicatorEnabled = false
+
+        activity?.drawerLayoutMain?.apply {
+            closeDrawers()
+            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }
 
@@ -115,8 +133,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
     }
 
     override fun connectUser() {
-        val action = SignInFragmentDirections.actionSignInFragmentToMainActivity()
-        findNavController().navigate(action)
+        findNavController().navigate(R.id.action_signInFragment_to_taskListFragment)
     }
 
     override fun displayMissingField(field: String) {

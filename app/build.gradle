@@ -63,6 +63,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.2.0"
 
     implementation 'org.koin:koin-android:2.0.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'org.koin:koin-test:2.0.1'
     androidTestImplementation 'org.koin:koin-test:2.0.1'
 

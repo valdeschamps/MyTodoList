@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.mytodolist.R
 import com.example.mytodolist.adapter.TaskAdapter
 import com.example.mytodolist.model.TodoTask
+import com.example.mytodolist.presenter.LoginPresenter
 import com.example.mytodolist.presenter.MainPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_task_list.*
@@ -21,6 +22,7 @@ import org.koin.android.ext.android.inject
 
 class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     MainPresenter.TaskListView {
+    private val loginPresenter: LoginPresenter by inject()
     private val mainPresenter: MainPresenter by inject()
     private val recyclerAdapter: TaskAdapter by lazy { TaskAdapter(this) }
     var actionMode: ActionMode? = null
@@ -77,6 +79,10 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter.setTaskListView(this)
+
+        if(!loginPresenter.isUserLogged()){
+            findNavController().navigate(R.id.action_taskListFragment_to_signInFragment)
+        }
     }
 
     override fun onCreateView(
@@ -93,7 +99,6 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         //todo pull to refresh
 
         //todo tasks not displayed after sign out and sign in again
-
         (recyclerViewTodoTask.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         recyclerViewTodoTask.apply {
             layoutManager = LinearLayoutManager(context)
@@ -107,7 +112,9 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         }
 
         //todo only get all tasks first time
-        mainPresenter.displayUserTasks()
+        if(loginPresenter.isUserLogged()) {
+            mainPresenter.displayUserTasks()
+        }
         activity?.drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 

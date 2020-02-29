@@ -5,10 +5,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.example.mytodolist.R
-import com.example.mytodolist.fragments.main.TaskListFragmentDirections
 import com.example.mytodolist.presenter.MainPresenter
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,17 +21,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbarmain)
 
-        navController.setGraph(R.navigation.nav_graph_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayoutMain)
+        navController.setGraph(R.navigation.nav_graph_all)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.taskListFragment, R.id.signInFragment), drawerLayoutMain)
         toolbarmain.setupWithNavController(navController, appBarConfiguration)
 
         navigationViewMain.setupWithNavController(navController)
         navigationViewMain.setNavigationItemSelectedListener(this)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
+    /*override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(drawerLayoutMain)
-    }
+    }*/
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
@@ -50,7 +48,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun signOut() {
         val mainPresenter: MainPresenter by inject()
         mainPresenter.disconnectUser()
-        val action = TaskListFragmentDirections.actionTaskListFragmentToLoginActivity()
-        findNavController(R.id.fragment).navigate(action)
+        findNavController(R.id.fragment).navigate(R.id.action_taskListFragment_to_signInFragment)
     }
 }

@@ -17,6 +17,7 @@ class LoginPresenter : KoinComponent {
     private val userManager: UserManager by inject()
     private var signInView: SignInView? = null
     private var registerView: RegisterView? = null
+    private var loadingView: LoadingView? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
 
@@ -32,6 +33,10 @@ class LoginPresenter : KoinComponent {
         if (userManager.userAlreadyLogged()) {
             signInView?.connectUser()
         }
+    }
+
+    fun isUserLogged(): Boolean {
+        return userManager.userAlreadyLogged()
     }
 
     private fun checkRegisterForm(
@@ -119,6 +124,10 @@ class LoginPresenter : KoinComponent {
         this.registerView = registerView
     }
 
+    fun setLoadingView(loadingView: LoadingView?) {
+        this.loadingView = loadingView
+    }
+
     interface SignInView {
         fun displayError(code: String)
         fun displayMissingField(field: String)
@@ -131,4 +140,6 @@ class LoginPresenter : KoinComponent {
         fun displayMissingField(field: String)
         fun confirmRegister()
     }
+
+    interface LoadingView
 }

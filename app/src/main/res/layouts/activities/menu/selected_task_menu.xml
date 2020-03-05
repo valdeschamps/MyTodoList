@@ -6,11 +6,13 @@
         android:id="@+id/selected_task_action_alarm"
         android:icon="@android:drawable/ic_lock_idle_alarm"
         android:title="@string/selected_task_alarm"
+        android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/selected_task_action_edit"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/selected_task_edit"
+        android:visible="false"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/selected_task_action_delete"

@@ -24,7 +24,6 @@ import org.koin.android.ext.android.inject
 
 class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEditorActionListener {
     private val loginPresenter: LoginPresenter by inject()
-    //todo display error for email/pwd coming from firebase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -81,7 +81,8 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         mainPresenter.setTaskListView(this)
 
         if(!loginPresenter.isUserLogged()){
-            findNavController().navigate(R.id.action_taskListFragment_to_signInFragment)
+            val action = TaskListFragmentDirections.actionTaskListFragmentToSignInFragment()
+            findNavController().navigate(action)
         }
     }
 

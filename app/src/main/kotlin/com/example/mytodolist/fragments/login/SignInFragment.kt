@@ -48,7 +48,6 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBarLoading.visibility = View.INVISIBLE
         textInputEmail.setOnEditorActionListener(this)
         textInputPassword.setOnEditorActionListener(this)
 

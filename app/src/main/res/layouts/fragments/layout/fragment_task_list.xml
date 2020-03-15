@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".fragments.main.TaskListFragment">
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTodoTask"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/recyclerViewTodoTask"/>
-
+        android:layout_height="match_parent" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonAdd"
         android:layout_width="wrap_content"
@@ -22,7 +22,9 @@
         android:tint="@color/primary" />
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:id="@+id/textViewTodoTaskList"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewTodoTaskList"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_margin="16dp" android:textAlignment="center"/>
+        android:layout_margin="16dp"
+        android:textAlignment="center"/>
 </FrameLayout>

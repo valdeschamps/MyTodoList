@@ -112,7 +112,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
                 val color = ContextCompat.getColor(
                     itemView.context,
                     if (position == selectedTaskPos) R.color.colorBackgroundTaskSelected
-                    else R.color.colorBackgroundTask
+                    else R.color.colorBackground
                 )
                 CardViewTaskMain.setCardBackgroundColor(color)
             }
@@ -128,7 +128,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
 
         private fun setExpandedDetails() {
             if (todoTask.details.isNotEmpty()) {
-                val animator = ValueAnimator.ofFloat(0f, 90f).setDuration(500L)
+                val animator = ValueAnimator.ofFloat(0f, 90f).setDuration(250L)
                 animator.addUpdateListener {
                     itemView.imageViewTriangle.rotation = it.animatedValue as Float
                 }

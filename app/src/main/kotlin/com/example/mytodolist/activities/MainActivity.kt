@@ -7,6 +7,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.mytodolist.R
+import com.example.mytodolist.fragments.main.TaskListFragmentDirections
 import com.example.mytodolist.presenter.MainPresenter
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +36,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 signOut()
             }
             R.id.itemOptions -> {
-                //todo
+                val action = TaskListFragmentDirections.actionTaskListFragmentToParametersFragment()
+                findNavController(R.id.fragment).navigate(action)
             }
         }
         return true

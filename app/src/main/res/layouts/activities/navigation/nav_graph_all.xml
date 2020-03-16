@@ -55,10 +55,22 @@
             app:popExitAnim="@anim/fragment_fade_exit"
             app:popUpTo="@id/taskListFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_taskListFragment_to_parametersFragment"
+            app:destination="@id/parametersFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/newTaskFragment"
         android:name="com.example.mytodolist.fragments.main.NewTaskFragment"
         android:label="fragment_new_task"
         tools:layout="@layout/fragment_new_task" />
+    <fragment
+        android:id="@+id/parametersFragment"
+        android:name="com.example.mytodolist.fragments.main.ParametersFragment"
+        android:label="fragment_parameters"
+        tools:layout="@layout/fragment_parameters" />
 </navigation>

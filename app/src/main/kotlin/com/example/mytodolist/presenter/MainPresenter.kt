@@ -12,8 +12,10 @@ import org.koin.core.inject
 
 class MainPresenter : KoinComponent {
     private val todoTaskManager: TodoTaskManager by inject()
+    private val userManager: UserManager by inject()
     private var taskListView: TaskListView? = null
     private var newTaskView: NewTaskView? = null
+    private var parametersView: ParametersView? = null
     private val job = SupervisorJob()
     private val scopeMain = CoroutineScope(Dispatchers.Main + job)
 
@@ -29,6 +31,10 @@ class MainPresenter : KoinComponent {
 
     fun setNewTaskView(newTaskView: NewTaskView?) {
         this.newTaskView = newTaskView
+    }
+
+    fun setParametersView(parametersView: ParametersView?){
+        this.parametersView = parametersView
     }
 
     private suspend fun getUserTasks(): ArrayList<TodoTask> {
@@ -99,8 +105,23 @@ class MainPresenter : KoinComponent {
         }
     }
 
+    fun deleteUser(email: String, password: String) {
+        scopeMain.launch {
+            try {
+                withContext(Dispatchers.Default) {
+                    userManager.reAuthenticate(email, password)
+                    todoTaskManager.deleteAllTasks()
+                    userManager.deleteUser()
+                }
+                parametersView?.disconnectUser()
+            }catch (e: FirebaseFirestoreException) {
+                parametersView?.displayError(ERROR)
+            }
+            //todo add catch
+        }
+    }
+
     fun disconnectUser() {
-        val userManager: UserManager by inject()
         userManager.disconnectUser()
     }
 
@@ -116,5 +137,10 @@ class MainPresenter : KoinComponent {
         fun closeNewTaskFragment()
         fun displayError(message: String)
         fun displayMissingField(field: String)
+    }
+
+    interface ParametersView {
+        fun disconnectUser()
+        fun displayError(message: String)
     }
 }

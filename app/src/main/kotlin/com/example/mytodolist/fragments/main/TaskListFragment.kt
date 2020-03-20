@@ -79,11 +79,6 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainPresenter.setTaskListView(this)
-
-        if(!loginPresenter.isUserLogged()){
-            val action = TaskListFragmentDirections.actionTaskListFragmentToSignInFragment()
-            findNavController().navigate(action)
-        }
     }
 
     override fun onCreateView(
@@ -92,6 +87,10 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
+        if(!loginPresenter.isUserLogged()){
+            val action = TaskListFragmentDirections.actionTaskListFragmentToSignInFragment()
+            findNavController().navigate(action)
+        }
         return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
 
@@ -228,5 +227,4 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
             } ?: throw IllegalStateException("Activity cannot be null")
         }
     }
-
 }

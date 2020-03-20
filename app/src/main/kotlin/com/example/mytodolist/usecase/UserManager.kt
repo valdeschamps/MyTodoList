@@ -34,6 +34,14 @@ class UserManager : KoinComponent {
     fun disconnectUser() {
         userGateway.disconnectUser()
     }
+
+    fun deleteUser() {
+        userGateway.deleteUser()
+    }
+
+    fun reAuthenticate(email: String, password: String){
+        userGateway.reAuthenticate(email, password)
+    }
 }
 
 interface UserGateway {
@@ -41,4 +49,6 @@ interface UserGateway {
     fun createUser(email: String, password: String)
     fun loginUser(email: String, password: String)
     fun disconnectUser()
+    fun deleteUser()
+    fun reAuthenticate(email: String, password: String)
 }

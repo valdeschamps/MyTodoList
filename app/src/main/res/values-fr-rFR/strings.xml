@@ -36,4 +36,7 @@
     <string name="dialog_delete_message">Voulez-vous supprimer cette tâche ?</string>
     <string name="yes">oui</string>
     <string name="no">non</string>
+    <string name="delete_account">Supprimer le compte</string>
+    <string name="cancel">Annuler</string>
+    <string name="reauth_title">Authentifiez-vous pour confirmer</string>
 </resources>

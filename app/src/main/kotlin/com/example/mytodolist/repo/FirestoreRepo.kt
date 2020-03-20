@@ -130,5 +130,26 @@ class FirestoreRepo : Repository, KoinComponent {
         }
     }
 
+    override fun deleteAllTAsks() {
+        try {
+            val tasks: ArrayList<TodoTask> = getAllTasks()
+            val batch = firestoreDB.batch()
+
+            val userCollection = firestoreDB.collection(firebaseInfos.collectionUsersName)
+            val userDoc = userCollection.document(user()?.uid ?: "")
+            val tasksCollection = userDoc.collection(firebaseInfos.collectionTasksName)
+
+            tasks.forEach {
+                val docRef = tasksCollection.document(it.id)
+                batch.delete(docRef)
+            }
+
+            batch.delete(userDoc)
+            batch.commit()
+        } catch (e: ExecutionException) {
+            throw e.cause ?: e
+        }
+    }
+
     class EmptyTaskResultException : Exception()
 }

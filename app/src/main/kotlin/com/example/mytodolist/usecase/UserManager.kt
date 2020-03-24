@@ -10,6 +10,7 @@ class UserManager : KoinComponent {
     private val userGateway: UserGateway by inject()
 
     private fun checkEmailPwd(email: String, password: String) {
+        //todo check if string == null
         if (email == "") {
             throw FieldMissingException(FIELD_EMAIL)
         } else if (password == "") {
@@ -40,6 +41,7 @@ class UserManager : KoinComponent {
     }
 
     fun reAuthenticate(email: String, password: String){
+        checkEmailPwd(email, password)
         userGateway.reAuthenticate(email, password)
     }
 }

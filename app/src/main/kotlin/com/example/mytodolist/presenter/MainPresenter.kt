@@ -1,10 +1,16 @@
 package com.example.mytodolist.presenter
 
 import com.example.mytodolist.model.TodoTask
+import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDCRED
+import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDUSER
+import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_NETWORK
 import com.example.mytodolist.repo.FirestoreRepo
 import com.example.mytodolist.usecase.TodoTaskManager
 import com.example.mytodolist.usecase.UserManager
 import com.example.mytodolist.utils.FieldMissingException
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.*
 import org.koin.core.KoinComponent
@@ -116,8 +122,15 @@ class MainPresenter : KoinComponent {
                 parametersView?.disconnectUser()
             }catch (e: FirebaseFirestoreException) {
                 parametersView?.displayError(ERROR)
+            }catch (e: FieldMissingException) {
+                parametersView?.displayMissingField(e.message.toString())
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
+                parametersView?.displayError(ERROR_INVALIDCRED)
+            } catch (e: FirebaseNetworkException) {
+                parametersView?.displayError(ERROR_NETWORK)
+            } catch (e: FirebaseAuthInvalidUserException) {
+                parametersView?.displayError(ERROR_INVALIDUSER)
             }
-            //todo add catch
         }
     }
 
@@ -141,6 +154,7 @@ class MainPresenter : KoinComponent {
 
     interface ParametersView {
         fun disconnectUser()
-        fun displayError(message: String)
+        fun displayError(code: String)
+        fun displayMissingField(field: String)
     }
 }

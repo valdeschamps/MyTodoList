@@ -92,6 +92,7 @@ class FirestoreRepo : Repository, KoinComponent {
                 return tasks
             } else {
                 tasksList.clear()
+                //todo rework
                 throw EmptyTaskResultException()
             }
         } catch (e: ExecutionException) {

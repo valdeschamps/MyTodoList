@@ -105,6 +105,7 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             return activity?.let {
                 val builder = AlertDialog.Builder(it)
+                builder.setTitle(resources.getString(R.string.reauth_title))
                 builder.setView(dialogView)
                     .setPositiveButton(
                         R.string.signIn

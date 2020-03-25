@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:title="options"
-            android:id="@+id/itemOptions"/>
+            android:id="@+id/itemOptions"
+            android:title="@string/parameters" />
         <item
-            android:title="Sign out"
-            android:id="@+id/itemSignOut"/>
+            android:id="@+id/itemSignOut"
+            android:title="@string/sign_out" />
     </group>
 </menu>

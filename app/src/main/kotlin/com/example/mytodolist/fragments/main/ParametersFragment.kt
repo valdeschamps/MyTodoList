@@ -6,11 +6,9 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -39,12 +37,12 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_parameters, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //todo fragment title
         buttonDeleteAccount.setOnClickListener {
             authDialogFragment = AuthDialogFragment(this)
             authDialogFragment?.show(requireActivity().supportFragmentManager, null)
@@ -68,6 +66,12 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
 
     override fun displayMissingField(field: String) {
         authDialogFragment?.displayMissingField(field)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        (activity as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.parameters)
     }
 
     class AuthDialogFragment(

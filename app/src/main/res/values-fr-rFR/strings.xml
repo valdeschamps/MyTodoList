@@ -39,4 +39,6 @@
     <string name="delete_account">Supprimer le compte</string>
     <string name="cancel">Annuler</string>
     <string name="reauth_title">Authentifiez-vous pour confirmer</string>
+    <string name="sign_out">Déconnexion</string>
+    <string name="parameters">Paramètres</string>
 </resources>

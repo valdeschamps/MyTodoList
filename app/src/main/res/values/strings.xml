@@ -39,4 +39,6 @@
     <string name="delete_account">Delete account</string>
     <string name="cancel">Cancel</string>
     <string name="reauth_title">Authenticate to confirm</string>
+    <string name="sign_out">Sign out</string>
+    <string name="parameters">Parameters</string>
 </resources>

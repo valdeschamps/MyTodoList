@@ -2,6 +2,7 @@ package com.example.mytodolist.fragments.main
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,7 +28,7 @@ import org.koin.android.ext.android.inject
 
 class ParametersFragment : Fragment(), MainPresenter.ParametersView {
     private val mainPresenter: MainPresenter by inject()
-    private val authDialogFragment = AuthDialogFragment(mainPresenter)
+    var authDialogFragment: AuthDialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +46,8 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
         super.onViewCreated(view, savedInstanceState)
         //todo fragment title
         buttonDeleteAccount.setOnClickListener {
-            //todo fix crash when clicked second time
-            authDialogFragment.show(requireActivity().supportFragmentManager, null)
+            authDialogFragment = AuthDialogFragment(this)
+            authDialogFragment?.show(requireActivity().supportFragmentManager, null)
         }
     }
 
@@ -57,19 +58,21 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
 
     //from MainPresenter
     override fun disconnectUser() {
-        authDialogFragment.dismiss()
+        authDialogFragment?.dismiss()
         findNavController().navigateUp()
     }
 
     override fun displayError(code: String) {
-        authDialogFragment.displayError(code)
+        authDialogFragment?.displayError(code)
     }
 
     override fun displayMissingField(field: String) {
-        authDialogFragment.displayMissingField(field)
+        authDialogFragment?.displayMissingField(field)
     }
 
-    class AuthDialogFragment(private val mainPresenter: MainPresenter) : DialogFragment(),
+    class AuthDialogFragment(
+        private val parametersFragment: ParametersFragment
+    ) : DialogFragment(),
         TextView.OnEditorActionListener {
         private val dialogView: View by lazy {
             requireActivity().layoutInflater.inflate(
@@ -105,13 +108,11 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
                 builder.setView(dialogView)
                     .setPositiveButton(
                         R.string.signIn
-                    ) { _, _ ->
-                        //todo abort dialog miss
-                    }
+                    ) { _, _ -> }
                     .setNegativeButton(
                         R.string.cancel
                     ) { _, _ ->
-                        dialog?.cancel()
+                        dialog?.dismiss()
                     }
 
                 dialogView.textInputEmail?.setOnEditorActionListener(this)
@@ -169,11 +170,16 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
             val dialog = dialog as AlertDialog
             val button = dialog.getButton(Dialog.BUTTON_POSITIVE)
             button.setOnClickListener {
-                mainPresenter.deleteUser(
+                parametersFragment.mainPresenter.deleteUser(
                     dialogView.textInputEmail?.text.toString(),
                     dialogView.textInputPassword?.text.toString()
                 )
             }
+        }
+
+        override fun onDismiss(dialog: DialogInterface) {
+            super.onDismiss(dialog)
+            parametersFragment.authDialogFragment = null
         }
     }
 }

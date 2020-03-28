@@ -104,6 +104,7 @@ class MainPresenter : KoinComponent {
                 withContext(Dispatchers.Default) {
                     todoTaskManager.deleteTask(taskId)
                 }
+                //todo getUserTasks() crash
                 taskListView?.deleteTask(getUserTasks(), oldTaskPos)
             } catch (e: FirebaseFirestoreException) {
                 taskListView?.displayError(ERROR)

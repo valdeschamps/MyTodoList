@@ -81,7 +81,15 @@ class TodoTaskManager : KoinComponent {
     }
 
     fun deleteAllTasks(){
-        repository.deleteAllTAsks()
+        val userTasks = repository.getLocalTasks()
+        if(userTasks.isNotEmpty()) {
+            val changeList = ArrayList<Pair<TodoTask, String>>()
+            userTasks.forEach {
+                changeList.add(Pair(it, TODOTASK_DELETE))
+            }
+            repository.updateTasks(changeList)
+        }
+        repository.deleteUserDoc()
     }
 
     fun getAllTasks(): ArrayList<TodoTask> {
@@ -94,5 +102,5 @@ interface Repository {
     fun createNewTask(todoTask: TodoTask)
     fun getLocalTasks(): ArrayList<TodoTask>
     fun updateTasks(tasksToUpdate: ArrayList<Pair<TodoTask, String>>)
-    fun deleteAllTAsks()
+    fun deleteUserDoc()
 }

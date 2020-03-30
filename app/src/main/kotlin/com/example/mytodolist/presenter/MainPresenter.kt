@@ -4,7 +4,6 @@ import com.example.mytodolist.model.TodoTask
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDCRED
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_INVALIDUSER
 import com.example.mytodolist.presenter.LoginPresenter.Companion.ERROR_NETWORK
-import com.example.mytodolist.repo.FirestoreRepo
 import com.example.mytodolist.usecase.TodoTaskManager
 import com.example.mytodolist.usecase.UserManager
 import com.example.mytodolist.utils.FieldMissingException
@@ -53,10 +52,12 @@ class MainPresenter : KoinComponent {
         scopeMain.launch {
             try {
                 val tasksList = getUserTasks()
-                taskListView?.displayTasks(tasksList, newTaskToDisplay)
-                newTaskToDisplay = false
-            } catch (e: FirestoreRepo.EmptyTaskResultException) {
-                taskListView?.displayHint()
+                if(tasksList.isNotEmpty()) {
+                    taskListView?.displayTasks(tasksList, newTaskToDisplay)
+                    newTaskToDisplay = false
+                }else{
+                    taskListView?.displayHint()
+                }
             } catch (e: FirebaseFirestoreException) {
                 taskListView?.displayError(ERROR)
             }
@@ -104,8 +105,11 @@ class MainPresenter : KoinComponent {
                 withContext(Dispatchers.Default) {
                     todoTaskManager.deleteTask(taskId)
                 }
-                //todo getUserTasks() crash
-                taskListView?.deleteTask(getUserTasks(), oldTaskPos)
+                val tasksList = getUserTasks()
+                taskListView?.deleteTask(tasksList, oldTaskPos)
+                if(tasksList.isEmpty()){
+                    taskListView?.displayHint()
+                }
             } catch (e: FirebaseFirestoreException) {
                 taskListView?.displayError(ERROR)
             }

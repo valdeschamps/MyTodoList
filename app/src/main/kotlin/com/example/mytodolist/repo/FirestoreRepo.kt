@@ -89,11 +89,10 @@ class FirestoreRepo : Repository, KoinComponent {
                 }
                 tasks = orderTasks(tasks)
                 tasksList = tasks
-                return tasks
+                return tasksList
             } else {
                 tasksList.clear()
-                //todo rework
-                throw EmptyTaskResultException()
+                return tasksList
             }
         } catch (e: ExecutionException) {
             throw e.cause ?: e
@@ -145,6 +144,4 @@ class FirestoreRepo : Repository, KoinComponent {
             throw e.cause ?: e
         }
     }
-
-    class EmptyTaskResultException : Exception()
 }

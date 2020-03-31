@@ -46,7 +46,6 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //todo cancel/confirm are not on top of the keyboard for the first task
 
         textInputTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

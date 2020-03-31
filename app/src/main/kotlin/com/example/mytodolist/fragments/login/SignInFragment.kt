@@ -89,7 +89,7 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         )
         toggle.isDrawerIndicatorEnabled = false
 
-        activity?.drawerLayoutMain?.apply {
+        requireActivity().drawerLayoutMain?.apply {
             closeDrawers()
             setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
@@ -114,11 +114,11 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
     }
 
     private fun closeKeyboard() {
-        if (activity?.currentFocus != null) {
+        if (requireActivity().currentFocus != null) {
             val inputManager =
-                activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(
-                activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+                requireActivity().currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
             )
         }
     }

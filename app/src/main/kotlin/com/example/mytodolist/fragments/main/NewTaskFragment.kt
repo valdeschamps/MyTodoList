@@ -113,7 +113,7 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        activity?.menuInflater?.inflate(R.menu.new_task_menu, menu)
+        requireActivity().menuInflater.inflate(R.menu.new_task_menu, menu)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -223,12 +223,12 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     }
 
     private fun closeKeyboard() {
-        val view = activity?.currentFocus
+        val view = requireActivity().currentFocus
         if (view != null) {
             val inputManager =
-                activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(
-                activity!!.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+                requireActivity().currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
             )
         }
     }

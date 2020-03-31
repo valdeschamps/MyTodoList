@@ -65,7 +65,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
 
         override fun onDestroyActionMode(mode: ActionMode) {
             actionMode = null
-            activity?.drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            requireActivity().drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             selectTask(false)
         }
 
@@ -113,7 +113,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         if(loginPresenter.isUserLogged()) {
             mainPresenter.displayUserTasks()
         }
-        activity?.drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        requireActivity().drawerLayoutMain?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
     override fun onDestroyView() {
@@ -134,7 +134,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
     }
 
     private fun closeAndLockDrawer(){
-        activity?.drawerLayoutMain?.apply {
+        requireActivity().drawerLayoutMain?.apply {
             closeDrawers()
             setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
@@ -212,7 +212,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         private val selectedTaskPos: Int
     ) : DialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            return activity?.let {
+            return requireActivity().let {
                 val builder = AlertDialog.Builder(it)
                 builder.setMessage(R.string.dialog_delete_message)
                     .setPositiveButton(R.string.yes
@@ -224,7 +224,7 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
                     ) { _, _ ->
                     }
                 builder.create()
-            } ?: throw IllegalStateException("Activity cannot be null")
+            }
         }
     }
 }

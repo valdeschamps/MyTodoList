@@ -6,33 +6,31 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="1dp"
     android:layout_marginBottom="1dp"
-    android:orientation="vertical"
-    app:cardBackgroundColor="@color/colorBackground">
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <ImageView
             android:id="@+id/imageViewTriangle"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:tint="@color/accent"
+            android:tint="@color/primaryDarkColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_media_play" />
 
         <ProgressBar
             android:id="@+id/progressBarCheck"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="4dp"
             android:layout_marginTop="8dp"
             android:indeterminate="false"
             android:progress="50"
-            android:progressTint="@color/accent"
+            android:progressTint="@color/primaryDarkColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/textViewDateTime"

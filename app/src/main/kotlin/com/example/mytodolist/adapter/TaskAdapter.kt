@@ -111,7 +111,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
 
                 val color = ContextCompat.getColor(
                     itemView.context,
-                    if (position == selectedTaskPos) R.color.colorBackgroundTaskSelected
+                    if (position == selectedTaskPos) R.color.accent
                     else R.color.colorBackground
                 )
                 CardViewTaskMain.setCardBackgroundColor(color)

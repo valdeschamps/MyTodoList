@@ -30,17 +30,13 @@ import org.koin.android.ext.android.inject
 class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorActionListener {
     private val loginPresenter: LoginPresenter by inject()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        loginPresenter.setLoginView(this)
-        loginPresenter.checkLoggedUser()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        loginPresenter.setLoginView(this)
+        loginPresenter.checkLoggedUser()
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.title = ""
         return inflater.inflate(R.layout.fragment_sign_in, container, false)
@@ -95,8 +91,8 @@ class SignInFragment : Fragment(), LoginPresenter.SignInView, TextView.OnEditorA
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroyView() {
+        super.onDestroyView()
         loginPresenter.setLoginView(null)
     }
 

@@ -25,16 +25,12 @@ import org.koin.android.ext.android.inject
 class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEditorActionListener {
     private val loginPresenter: LoginPresenter by inject()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        loginPresenter.setRegisterView(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        loginPresenter.setRegisterView(this)
         (activity as AppCompatActivity).supportActionBar?.title = ""
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
@@ -78,8 +74,8 @@ class RegisterFragment : Fragment(), LoginPresenter.RegisterView, TextView.OnEdi
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroyView() {
+        super.onDestroyView()
         loginPresenter.setRegisterView(null)
     }
 

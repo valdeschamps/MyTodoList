@@ -76,16 +76,12 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mainPresenter.setTaskListView(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainPresenter.setTaskListView(this)
         setHasOptionsMenu(true)
         if(!loginPresenter.isUserLogged()){
             val action = TaskListFragmentDirections.actionTaskListFragmentToSignInFragment()
@@ -120,10 +116,6 @@ class TaskListFragment : Fragment(), TaskAdapter.TaskListFragmentInterface,
         super.onDestroyView()
         closeAndLockDrawer()
         actionMode?.finish()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
         mainPresenter.setTaskListView(null)
     }
 

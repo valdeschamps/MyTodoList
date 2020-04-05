@@ -28,15 +28,11 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
     private val mainPresenter: MainPresenter by inject()
     var authDialogFragment: AuthDialogFragment? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mainPresenter.setParametersView(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainPresenter.setParametersView(this)
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_parameters, container, false)
     }
@@ -49,8 +45,8 @@ class ParametersFragment : Fragment(), MainPresenter.ParametersView {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroyView() {
+        super.onDestroyView()
         mainPresenter.setParametersView(null)
     }
 

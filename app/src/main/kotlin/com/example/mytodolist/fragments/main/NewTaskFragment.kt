@@ -30,16 +30,12 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
     private var dateLong: Long = -1L
     private var timeLong: Long = -1L
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mainPresenter.setNewTaskView(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainPresenter.setNewTaskView(this)
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_new_task, container, false)
     }
@@ -96,8 +92,8 @@ class NewTaskFragment : Fragment(), View.OnClickListener, MainPresenter.NewTaskV
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroyView() {
+        super.onDestroyView()
         closeKeyboard()
         mainPresenter.setNewTaskView(null)
     }

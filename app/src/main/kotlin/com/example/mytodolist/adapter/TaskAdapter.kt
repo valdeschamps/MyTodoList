@@ -1,6 +1,7 @@
 package com.example.mytodolist.adapter
 
 import android.animation.ValueAnimator
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -21,6 +22,7 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
     private val taskListFragment: TaskListFragmentInterface = taskListFragment
     var selectedTaskPos = -1
     var selectedTaskId = ""
+    val checkTime = (taskListFragment.resources.getInteger(R.integer.task_check_time)).toLong()
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var todoTask = TodoTask()
@@ -28,27 +30,29 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
         var isExpanded = false
 
         init {
-            val checkSpinnerRate = 2
-            var progressStatus = 0
+            val checkTask = Runnable {
+                setTaskDone()
+                taskListFragment.onTodoTaskChecked(todoTask, adapterPosition)
+            }
+            val checkHandler = android.os.Handler(Looper.getMainLooper())
+
+            val progressBarAnimator = ValueAnimator.ofInt(0, 100).setDuration(checkTime)
+            progressBarAnimator.addUpdateListener {
+                itemView.progressBarCheck.progress = it.animatedValue as Int
+            }
 
             itemView.constraintLayoutCheck.setOnTouchListener { _, event ->
                 if (!taskDone) {
                     val action: Int = event.actionMasked
-                    if (action == MotionEvent.ACTION_UP) {
-                        progressStatus = 0
-                        itemView.progressBarCheck.progress = progressStatus
-                    } else {
-                        if (progressStatus == 100) {
-                            //todo lock task view
-                            setTaskDone()
-                            taskListFragment.onTodoTaskChecked(todoTask, adapterPosition)
-                        } else {
-                            progressStatus += checkSpinnerRate
-                            itemView.progressBarCheck.incrementProgressBy(checkSpinnerRate)
-                        }
+                    if (action == MotionEvent.ACTION_DOWN) {
+                        checkHandler.postDelayed(checkTask, checkTime)
+                        progressBarAnimator.start()
+                    } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                        checkHandler.removeCallbacks(checkTask)
+                        progressBarAnimator.cancel()
+                        progressBarAnimator.currentPlayTime = 0
                     }
                 }
-                //todo set to 0 if touch out of the view
                 true
             }
 

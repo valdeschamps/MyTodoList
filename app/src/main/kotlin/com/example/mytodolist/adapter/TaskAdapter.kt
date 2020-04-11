@@ -1,7 +1,8 @@
 package com.example.mytodolist.adapter
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -30,26 +31,25 @@ class TaskAdapter(taskListFragment: TaskListFragment) :
         var isExpanded = false
 
         init {
-            val checkTask = Runnable {
-                setTaskDone()
-                taskListFragment.onTodoTaskChecked(todoTask, adapterPosition)
-            }
-            val checkHandler = android.os.Handler(Looper.getMainLooper())
-
             val progressBarAnimator = ValueAnimator.ofInt(0, 100).setDuration(checkTime)
             progressBarAnimator.addUpdateListener {
                 itemView.progressBarCheck.progress = it.animatedValue as Int
             }
 
+            progressBarAnimator.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    setTaskDone()
+                    taskListFragment.onTodoTaskChecked(todoTask, adapterPosition)
+                }
+            })
+
             itemView.constraintLayoutCheck.setOnTouchListener { _, event ->
                 if (!taskDone) {
                     val action: Int = event.actionMasked
                     if (action == MotionEvent.ACTION_DOWN) {
-                        checkHandler.postDelayed(checkTask, checkTime)
                         progressBarAnimator.start()
                     } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                        checkHandler.removeCallbacks(checkTask)
-                        progressBarAnimator.cancel()
+                        progressBarAnimator.pause()
                         progressBarAnimator.currentPlayTime = 0
                     }
                 }

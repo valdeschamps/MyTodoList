@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.mytodolist.fragments.login.SignInFragment"
+        android:name="com.valent.mytodolist.fragments.login.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
@@ -30,12 +30,12 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.mytodolist.fragments.login.RegisterFragment"
+        android:name="com.valent.mytodolist.fragments.login.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
     <fragment
         android:id="@+id/taskListFragment"
-        android:name="com.example.mytodolist.fragments.main.TaskListFragment"
+        android:name="com.valent.mytodolist.fragments.main.TaskListFragment"
         android:label="fragment_task_list"
         tools:layout="@layout/fragment_task_list" >
         <action
@@ -65,12 +65,12 @@
     </fragment>
     <fragment
         android:id="@+id/newTaskFragment"
-        android:name="com.example.mytodolist.fragments.main.NewTaskFragment"
+        android:name="com.valent.mytodolist.fragments.main.NewTaskFragment"
         android:label="fragment_new_task"
         tools:layout="@layout/fragment_new_task" />
     <fragment
         android:id="@+id/parametersFragment"
-        android:name="com.example.mytodolist.fragments.main.ParametersFragment"
+        android:name="com.valent.mytodolist.fragments.main.ParametersFragment"
         android:label="fragment_parameters"
         tools:layout="@layout/fragment_parameters" />
 </navigation>
